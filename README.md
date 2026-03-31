@@ -1,73 +1,132 @@
-# React + TypeScript + Vite
+# Collaborative Dashboard Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Built a collaborative dashboard builder with drag-and-drop layout editing, chart/stat widgets, global filtering, autosaved persistence, and best-effort multiplayer presence (online users, remote cursors, selected-widget signals).
 
-Currently, two official plugins are available:
+## Scope and Philosophy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+This project intentionally stays frontend-led and scoped to finish:
 
-## React Compiler
+- no auth or teams
+- no multi-tenant model
+- no query builder
+- no CRDT / operational transform merge logic
+- collaboration is best-effort presence + last-write-wins persistence
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The backend stores dashboard JSON (`widgets`, `layouts`, `globalFilters`) for iteration speed.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Drag/resize dashboard grid with `react-grid-layout`
+- Three widget types:
+  - line chart (`portfolioTimeseries`)
+  - bar chart (`assetAllocation`)
+  - stat card (`performanceStats`)
+- Widget configuration panel (title/type/per-widget config)
+- Global filters (date range + asset classes)
+- Debounced autosave + save status messaging
+- Shareable URL routing (`/dashboards/:dashboardId`)
+- Realtime presence over WebSocket:
+  - connected users indicator
+  - live remote cursors
+  - selected-widget presence UI and "is editing this" copy
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Tech Stack
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Frontend: React, TypeScript, Vite, Tailwind v4
+- State: Zustand (UI/presence), TanStack Query (server fetch/mutation)
+- Charts: Recharts
+- Layout: react-grid-layout
+- Backend: Fastify + Zod + Postgres
+- Realtime: `@fastify/websocket`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Architecture
+
+State is split by responsibility to keep interaction-heavy UI responsive:
+
+- **Ephemeral UI state**: Zustand (`dashboardStore`)
+- **Persisted server state**: Fastify + Postgres + TanStack Query
+- **Derived state**: memoized filtering/transforms from seeded data
+- **Presence room state**: dedicated Zustand store + websocket room
+
+```mermaid
+flowchart LR
+  UI[React UI]
+  DS[dashboardStore]
+  PS[presenceStore]
+  Q[TanStack Query]
+  API[Fastify REST API]
+  WS[Fastify WS room]
+  DB[(Postgres dashboards)]
+
+  UI <--> DS
+  UI <--> PS
+  UI --> Q
+  Q --> API
+  API --> DB
+  UI <--> WS
+  WS --> PS
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## One-Command Local Setup
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Requirements:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node 20+
+- Docker Desktop (for Postgres)
+
+```bash
+npm install && docker compose up -d && npm run dev:full
 ```
+
+Open `http://localhost:5173`.
+
+## Environment
+
+Copy `.env.example` to `.env` (or use defaults):
+
+```bash
+cp .env.example .env
+```
+
+Default API server env:
+
+- `DATABASE_URL=postgres://postgres:postgres@localhost:5433/dashboards`
+- `PORT=3333`
+
+## Scripts
+
+- `npm run dev` - frontend only
+- `npm run dev:api` - backend only
+- `npm run dev:full` - frontend + backend
+- `npm run seed:demo` - creates a polished demo dashboard via API
+- `npm run lint` - eslint + server typecheck
+- `npm run build` - production build
+
+## Seed a Demo Dashboard
+
+With API running (`npm run dev:api` or `npm run dev:full`):
+
+```bash
+npm run seed:demo
+```
+
+It prints the created dashboard URL.
+
+## Deployment Notes
+
+- Frontend: deploy Vite static build (`dist`) to Vercel/Netlify/Cloudflare Pages
+- Backend: deploy Fastify app to Fly.io/Render/Railway
+- Provision Postgres and set `DATABASE_URL`
+- Set frontend env:
+  - `VITE_API_BASE_URL=https://<api-domain>`
+  - optionally `VITE_WS_BASE_URL=wss://<api-domain>`
+
+## Tradeoffs
+
+- **JSON persistence over normalized schema**: faster iteration, simpler API surface.
+- **Best-effort realtime over strict collaboration correctness**: enough for portfolio demonstration without backend-heavy complexity.
+- **Three fixed widget types**: keeps UX focused and finishable.
+
+## Portfolio Write-up
+
+Use `docs/portfolio-writeup.md` as the short recruiter-facing narrative and talking points.
