@@ -12,7 +12,7 @@ This project was built to demonstrate more than chart rendering. The goal was to
 
 - A polished dashboard canvas with drag, resize, duplicate, selection, rename, and keyboard shortcuts
 - Backend persistence with shareable URLs and debounced autosave
-- Best-effort multiplayer collaboration with presence, remote cursors, and selected-widget signals
+- Best-effort multiplayer collaboration with presence, remote cursors, selected-widget signals, and safe deferred remote updates
 - A deliberately scoped collaboration model that feels live without overengineering into CRDT complexity
 
 The result is a portfolio project that feels like an actual internal analytics product instead of a static chart gallery.
@@ -29,6 +29,7 @@ The result is a portfolio project that feels like an actual internal analytics p
   - connected users indicator
   - live remote cursors
   - selected-widget signals and editing cues
+- Remote saves auto-refresh clean tabs and defer on dirty tabs behind an explicit reload prompt
 - Undo/redo support for local dashboard edits
 
 ## Technical Stack
@@ -73,7 +74,7 @@ flowchart LR
 This project intentionally optimizes for finish, clarity, and explainability:
 
 - **Document persistence over a normalized schema**: whole-dashboard JSON is faster to iterate on and simpler to reason about for an MVP
-- **Best-effort collaboration over strict merge correctness**: presence and editing signals add clear value without requiring CRDT/OT complexity
+- **Best-effort collaboration over strict merge correctness**: presence, editing signals, and deferred remote refresh add clear value without requiring CRDT/OT complexity
 - **Last-write-wins persistence**: acceptable for a portfolio collaboration demo, but not positioned as fully conflict-safe realtime editing
 - **Curated widget catalog over open-ended builder logic**: helps the app feel broader while keeping the UX coherent
 
