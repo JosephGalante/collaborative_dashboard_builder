@@ -5,12 +5,12 @@ const connectionString = process.env.DATABASE_URL
 
 if (!connectionString) {
   console.warn(
-    '[server] DATABASE_URL is not set. Start Postgres (see docker-compose.yml) and set DATABASE_URL, e.g. postgres://postgres:postgres@localhost:5432/dashboards',
+    '[server] DATABASE_URL is not set. Start Postgres (see docker-compose.yml) and set DATABASE_URL, e.g. postgres://postgres:postgres@localhost:5433/dashboards',
   )
 }
 
 export const pool = new pg.Pool({
-  connectionString: connectionString ?? 'postgres://postgres:postgres@localhost:5432/dashboards',
+  connectionString: connectionString ?? 'postgres://postgres:postgres@localhost:5433/dashboards',
   max: 10,
 })
 

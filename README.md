@@ -17,10 +17,7 @@ The backend stores dashboard JSON (`widgets`, `layouts`, `globalFilters`) for it
 ## Features
 
 - Drag/resize dashboard grid with `react-grid-layout`
-- Three widget types:
-  - line chart (`portfolioTimeseries`)
-  - bar chart (`assetAllocation`)
-  - stat card (`performanceStats`)
+- Multiple widget types across charts, KPI cards, ranked lists, insight panels, banners, and timeline-style feeds
 - Widget configuration panel (title/type/per-widget config)
 - Global filters (date range + asset classes)
 - Debounced autosave + save status messaging
@@ -92,6 +89,13 @@ Default API server env:
 
 - `DATABASE_URL=postgres://postgres:postgres@localhost:5433/dashboards`
 - `PORT=3333`
+- `HOST=0.0.0.0`
+- `CORS_ORIGIN=http://localhost:5173`
+
+Frontend deploy env:
+
+- `VITE_API_BASE_URL=https://<api-domain>`
+- `VITE_WS_BASE_URL=wss://<api-domain>`
 
 ## Scripts
 
@@ -100,7 +104,10 @@ Default API server env:
 - `npm run dev:full` - frontend + backend
 - `npm run seed:demo` - creates a polished demo dashboard via API
 - `npm run lint` - eslint + server typecheck
-- `npm run build` - production build
+- `npm run build:client` - production frontend build
+- `npm run build:server` - production backend build to `dist-server`
+- `npm run build` - production frontend + backend build
+- `npm run start:api` - run compiled backend
 
 ## Seed a Demo Dashboard
 
@@ -114,18 +121,44 @@ It prints the created dashboard URL.
 
 ## Deployment Notes
 
-- Frontend: deploy Vite static build (`dist`) to Vercel/Netlify/Cloudflare Pages
-- Backend: deploy Fastify app to Fly.io/Render/Railway
-- Provision Postgres and set `DATABASE_URL`
-- Set frontend env:
-  - `VITE_API_BASE_URL=https://<api-domain>`
-  - optionally `VITE_WS_BASE_URL=wss://<api-domain>`
+Frontend:
+
+- Deploy Vite static build (`dist`) to Vercel, Netlify, or Cloudflare Pages
+- Set `VITE_API_BASE_URL=https://<api-domain>`
+- Set `VITE_WS_BASE_URL=wss://<api-domain>` if websocket traffic is on a different origin than the page
+
+Backend:
+
+- Deploy the Fastify API separately to Render, Railway, Fly.io, or a container host
+- Build command: `npm run build:server`
+- Start command: `npm run start:api`
+- Health endpoint: `GET /healthz`
+- Readiness endpoint: `GET /readyz`
+- Required env: `DATABASE_URL`
+- Recommended env: `PORT`, `HOST`, `CORS_ORIGIN`
+
+Container option:
+
+- `Dockerfile.api` builds a production backend image
+- Example:
+
+```bash
+docker build -f Dockerfile.api -t collaborative-dashboard-api .
+docker run --env-file .env -p 3333:3333 collaborative-dashboard-api
+```
+
+Suggested rollout order:
+
+1. Provision Postgres and set `DATABASE_URL`
+2. Deploy backend and confirm `/healthz` and `/readyz`
+3. Deploy frontend with `VITE_API_BASE_URL` and `VITE_WS_BASE_URL`
+4. Run `npm run seed:demo` against the live API if you want a polished shareable demo link
 
 ## Tradeoffs
 
 - **JSON persistence over normalized schema**: faster iteration, simpler API surface.
 - **Best-effort realtime over strict collaboration correctness**: enough for portfolio demonstration without backend-heavy complexity.
-- **Three fixed widget types**: keeps UX focused and finishable.
+- **Curated widget catalog over open-ended widget building**: keeps UX focused and finishable while still showing product breadth.
 
 ## Portfolio Write-up
 
