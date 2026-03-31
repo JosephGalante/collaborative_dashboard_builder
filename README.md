@@ -154,6 +154,14 @@ Suggested rollout order:
 3. Deploy frontend with `VITE_API_BASE_URL` and `VITE_WS_BASE_URL`
 4. Run `npm run seed:demo` against the live API if you want a polished shareable demo link
 
+Provider-specific guide:
+
+- For the recommended zero-cost stack, see `docs/deploy-vercel-render-neon.md`
+- Included config files:
+  - `vercel.json`
+  - `render.yaml`
+  - `Dockerfile.api`
+
 ## Tradeoffs
 
 - **JSON persistence over normalized schema**: faster iteration, simpler API surface.

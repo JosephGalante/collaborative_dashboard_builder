@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: collaborative-dashboard-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.api
+    autoDeploy: true
+    healthCheckPath: /healthz
+    envVars:
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 3333
+      - key: CORS_ORIGIN
+        sync: false
+      - key: DATABASE_URL
+        sync: false
