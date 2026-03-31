@@ -11,6 +11,7 @@ type PresenceUser = {
 type PresenceRoom = {
   users: Map<string, PresenceUser>
   selections: Map<string, string | null>
+  cursors: Map<string, { userId: string; x: number; y: number; updatedAt: number }>
   sockets: Set<WsLike>
 }
 
@@ -39,7 +40,17 @@ type SelectionEvent = {
   }
 }
 
-type SocketEvent = JoinEvent | LeaveEvent | SelectionEvent
+type CursorMoveEvent = {
+  type: 'cursor:move'
+  payload: {
+    dashboardId: string
+    userId: string
+    x: number
+    y: number
+  }
+}
+
+type SocketEvent = JoinEvent | LeaveEvent | SelectionEvent | CursorMoveEvent
 type WsLike = {
   readyState: number
   send: (payload: string) => void
@@ -55,6 +66,7 @@ function getRoom(dashboardId: string): PresenceRoom {
   const room: PresenceRoom = {
     users: new Map(),
     selections: new Map(),
+    cursors: new Map(),
     sockets: new Set(),
   }
   rooms.set(dashboardId, room)
@@ -97,6 +109,7 @@ function leaveRoom(socket: WsLike) {
   if (!stillConnected) {
     room.users.delete(meta.userId)
     room.selections.delete(meta.userId)
+    room.cursors.delete(meta.userId)
     broadcast(room, {
       type: 'presence:user_left',
       payload: { userId: meta.userId },
@@ -147,7 +160,7 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
           type: 'presence:snapshot',
           payload: {
             users: Array.from(room.users.values()),
-            cursors: [],
+            cursors: Array.from(room.cursors.values()),
             selections: Array.from(room.selections.entries()).map(
               ([userId, selectedWidgetId]) => ({ userId, selectedWidgetId }),
             ),
@@ -157,6 +170,23 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
         broadcast(room, {
           type: 'presence:user_joined',
           payload: nextUser,
+        })
+        return
+      }
+
+      if (event.type === 'cursor:move') {
+        const room = rooms.get(event.payload.dashboardId)
+        if (!room) return
+        const nextCursor = {
+          userId: event.payload.userId,
+          x: event.payload.x,
+          y: event.payload.y,
+          updatedAt: Date.now(),
+        }
+        room.cursors.set(event.payload.userId, nextCursor)
+        broadcast(room, {
+          type: 'cursor:moved',
+          payload: nextCursor,
         })
         return
       }

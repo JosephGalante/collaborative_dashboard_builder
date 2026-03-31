@@ -61,6 +61,8 @@ export function useDashboardSocket(dashboardId: string | undefined) {
   const setSnapshot = usePresenceStore((s) => s.setSnapshot)
   const upsertUser = usePresenceStore((s) => s.upsertUser)
   const removeUser = usePresenceStore((s) => s.removeUser)
+  const updateCursor = usePresenceStore((s) => s.updateCursor)
+  const removeCursor = usePresenceStore((s) => s.removeCursor)
   const updateSelection = usePresenceStore((s) => s.updateSelection)
   const resetPresence = usePresenceStore((s) => s.resetPresence)
   const currentUser = usePresenceStore((s) => s.currentUser)
@@ -115,6 +117,10 @@ export function useDashboardSocket(dashboardId: string | undefined) {
           removeUser(event.payload.userId)
           return
         }
+        if (event.type === 'cursor:moved') {
+          updateCursor(event.payload)
+          return
+        }
         if (event.type === 'selection:updated') {
           updateSelection(event.payload)
         }
@@ -142,7 +148,7 @@ export function useDashboardSocket(dashboardId: string | undefined) {
       }
       resetPresence()
     }
-  }, [dashboardId, valid, resetPresence, setConnectionStatus, setCurrentUser, setSnapshot, upsertUser, removeUser, updateSelection])
+  }, [dashboardId, valid, resetPresence, setConnectionStatus, setCurrentUser, setSnapshot, upsertUser, removeUser, updateCursor, updateSelection])
 
   useEffect(() => {
     if (!dashboardId || !currentUser) {
@@ -164,4 +170,51 @@ export function useDashboardSocket(dashboardId: string | undefined) {
       } satisfies ClientToServerEvent),
     )
   }, [dashboardId, currentUser, selectedWidgetId])
+
+  useEffect(() => {
+    if (!dashboardId || !currentUser) {
+      return
+    }
+    let rafId = 0
+    let lastSentAt = 0
+
+    const emit = (x: number, y: number) => {
+      const ws = socketRef.current
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        return
+      }
+      ws.send(
+        JSON.stringify({
+          type: 'cursor:move',
+          payload: { dashboardId, userId: currentUser.userId, x, y },
+        } satisfies ClientToServerEvent),
+      )
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      const canvas = document.querySelector<HTMLElement>('[data-dashboard-canvas="true"]')
+      if (!canvas) return
+      const rect = canvas.getBoundingClientRect()
+      if (rect.width <= 0 || rect.height <= 0) return
+
+      const x = (event.clientX - rect.left) / rect.width
+      const y = (event.clientY - rect.top) / rect.height
+      if (x < 0 || x > 1 || y < 0 || y > 1) return
+
+      if (rafId) cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => {
+        const now = Date.now()
+        if (now - lastSentAt < 32) return
+        lastSentAt = now
+        emit(x, y)
+      })
+    }
+
+    window.addEventListener('pointermove', onPointerMove)
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      window.removeEventListener('pointermove', onPointerMove)
+      removeCursor(currentUser.userId)
+    }
+  }, [dashboardId, currentUser, removeCursor])
 }

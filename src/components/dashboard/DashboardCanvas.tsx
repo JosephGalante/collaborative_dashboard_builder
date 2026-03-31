@@ -2,6 +2,7 @@ import GridLayout, { WidthProvider } from 'react-grid-layout/legacy'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
+import RemoteCursorLayer from '@/components/presence/RemoteCursorLayer'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { useDerivedSeedDataset } from '@/hooks/useDerivedSeedDataset'
 
@@ -60,7 +61,11 @@ export default function DashboardCanvas() {
 
   return (
     <section className="border-x border-zinc-800 p-4">
-      <div className="h-full overflow-auto rounded-xl border border-zinc-800/90 bg-zinc-900/50 p-2 shadow-inner">
+      <div
+        data-dashboard-canvas="true"
+        className="relative h-full overflow-auto rounded-xl border border-zinc-800/90 bg-zinc-900/50 p-2 shadow-inner"
+      >
+        <RemoteCursorLayer />
         <AutoWidthGridLayout
           className="layout"
           cols={12}
