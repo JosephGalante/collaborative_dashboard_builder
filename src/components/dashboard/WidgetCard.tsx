@@ -6,6 +6,7 @@ type WidgetCardProps = {
   widget: Widget
   dataset: SeedDataset
   isSelected: boolean
+  remoteEditors?: Array<{ userId: string; name: string; color: string }>
   onSelect: (widgetId: string) => void
   onRemove: (widgetId: string) => void
   onDuplicate: (widgetId: string) => void
@@ -15,10 +16,13 @@ export default function WidgetCard({
   widget,
   dataset,
   isSelected,
+  remoteEditors = [],
   onSelect,
   onRemove,
   onDuplicate,
 }: WidgetCardProps) {
+  const hasRemoteEditors = remoteEditors.length > 0
+
   return (
     <article
       role="button"
@@ -34,7 +38,9 @@ export default function WidgetCard({
         'flex h-full min-h-0 flex-col rounded-lg border bg-zinc-900/90 p-3 text-left shadow-sm transition',
         isSelected
           ? 'border-indigo-400 ring-2 ring-indigo-500/35'
-          : 'border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900',
+          : hasRemoteEditors
+            ? 'border-amber-500/70 ring-1 ring-amber-500/30'
+            : 'border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50',
       ].join(' ')}
     >
@@ -44,6 +50,13 @@ export default function WidgetCard({
             {widgetDisplayName(widget.type)}
           </p>
           <h3 className="mt-1 truncate text-sm font-medium text-zinc-100">{widget.title}</h3>
+          {hasRemoteEditors ? (
+            <p className="mt-1 text-[11px] text-amber-300/90">
+              {remoteEditors.length === 1
+                ? `${remoteEditors[0]?.name} is viewing`
+                : `${remoteEditors.length} collaborators viewing`}
+            </p>
+          ) : null}
         </div>
         <div className="flex shrink-0 gap-1.5">
           <button

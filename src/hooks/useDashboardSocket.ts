@@ -95,6 +95,15 @@ export function useDashboardSocket(dashboardId: string | undefined) {
         type: 'presence:join',
         payload: { dashboardId, user },
       })
+      const selectedWidgetIdOnOpen = useDashboardStore.getState().selectedWidgetId
+      send({
+        type: 'selection:update',
+        payload: {
+          dashboardId,
+          userId: user.userId,
+          selectedWidgetId: selectedWidgetIdOnOpen,
+        },
+      })
     })
 
     ws.addEventListener('message', (message) => {
@@ -107,6 +116,15 @@ export function useDashboardSocket(dashboardId: string | undefined) {
         if (event.type === 'presence:identity_assigned') {
           window.sessionStorage.setItem(TAB_USER_KEY, JSON.stringify(event.payload.user))
           setCurrentUser(event.payload.user)
+          const selectedWidgetIdNow = useDashboardStore.getState().selectedWidgetId
+          send({
+            type: 'selection:update',
+            payload: {
+              dashboardId,
+              userId: event.payload.user.userId,
+              selectedWidgetId: selectedWidgetIdNow,
+            },
+          })
           return
         }
         if (event.type === 'presence:user_joined') {

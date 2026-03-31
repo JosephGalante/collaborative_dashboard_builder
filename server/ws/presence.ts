@@ -144,7 +144,6 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
         const nextUser = hasConnectedUser(room, event.payload.user.userId)
           ? { ...event.payload.user, userId: randomUUID() }
           : event.payload.user
-
         room.sockets.add(socket)
         room.users.set(nextUser.userId, nextUser)
         socketMeta.set(socket, { dashboardId, userId: nextUser.userId })
@@ -194,6 +193,7 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
       if (event.type === 'selection:update') {
         const room = rooms.get(event.payload.dashboardId)
         if (!room) return
+        if (!room.users.has(event.payload.userId)) return
         room.selections.set(event.payload.userId, event.payload.selectedWidgetId)
         broadcast(room, {
           type: 'selection:updated',

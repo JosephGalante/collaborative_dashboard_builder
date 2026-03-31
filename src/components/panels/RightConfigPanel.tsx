@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import WidgetConfigForm from '@/components/panels/WidgetConfigForm'
 import GlobalFiltersPanel from '@/components/panels/GlobalFiltersPanel'
+import { usePresenceStore } from '@/stores/presenceStore'
 
 export default function RightConfigPanel() {
   const widgets = useDashboardStore((state) => state.widgets)
@@ -10,11 +11,24 @@ export default function RightConfigPanel() {
   const duplicateWidget = useDashboardStore((state) => state.duplicateWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
+  const users = usePresenceStore((state) => state.users)
+  const selections = usePresenceStore((state) => state.selections)
+  const currentUser = usePresenceStore((state) => state.currentUser)
 
   const selectedWidget = useMemo(
     () => widgets.find((widget) => widget.id === selectedWidgetId) ?? null,
     [selectedWidgetId, widgets],
   )
+  const remoteEditors = useMemo(() => {
+    if (!selectedWidget) {
+      return []
+    }
+    return users.filter(
+      (user) =>
+        user.userId !== currentUser?.userId &&
+        selections[user.userId] === selectedWidget.id,
+    )
+  }, [selectedWidget, users, currentUser, selections])
 
   return (
     <aside className="flex min-h-0 flex-col border-l border-zinc-800 bg-zinc-900/50">
@@ -53,6 +67,14 @@ export default function RightConfigPanel() {
               Changes save automatically after you pause editing. Press Delete or Backspace to remove
               the selected widget when focus is not in a field.
             </p>
+            {remoteEditors.length > 0 ? (
+              <div className="mt-2 rounded border border-amber-500/40 bg-amber-500/10 px-2 py-1.5 text-[11px] text-amber-200/95">
+                {remoteEditors.length === 1
+                  ? `${remoteEditors[0]?.name} is editing this widget right now.`
+                  : `${remoteEditors.length} collaborators are editing this widget right now.`}{' '}
+                Updates are last-write-wins.
+              </div>
+            ) : null}
           </div>
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
             <WidgetConfigForm widget={selectedWidget} updateWidget={updateWidget} />

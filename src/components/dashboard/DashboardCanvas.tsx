@@ -1,10 +1,12 @@
 import GridLayout, { WidthProvider } from 'react-grid-layout/legacy'
+import { useMemo } from 'react'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
 import RemoteCursorLayer from '@/components/presence/RemoteCursorLayer'
 import { useDashboardStore } from '@/stores/dashboardStore'
 import { useDerivedSeedDataset } from '@/hooks/useDerivedSeedDataset'
+import { usePresenceStore } from '@/stores/presenceStore'
 
 const AutoWidthGridLayout = WidthProvider(GridLayout)
 
@@ -39,7 +41,23 @@ export default function DashboardCanvas() {
   const selectWidget = useDashboardStore((state) => state.selectWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
   const duplicateWidget = useDashboardStore((state) => state.duplicateWidget)
+  const users = usePresenceStore((state) => state.users)
+  const selections = usePresenceStore((state) => state.selections)
+  const currentUser = usePresenceStore((state) => state.currentUser)
   const dataset = useDerivedSeedDataset(globalFilters)
+
+  const remoteEditorsByWidgetId = useMemo(() => {
+    const byWidgetId = new Map<string, Array<{ userId: string; name: string; color: string }>>()
+    for (const user of users) {
+      if (user.userId === currentUser?.userId) continue
+      const selected = selections[user.userId]
+      if (!selected) continue
+      const next = byWidgetId.get(selected) ?? []
+      next.push({ userId: user.userId, name: user.name, color: user.color })
+      byWidgetId.set(selected, next)
+    }
+    return byWidgetId
+  }, [users, selections, currentUser])
 
   if (widgets.length === 0) {
     return (
@@ -84,7 +102,11 @@ export default function DashboardCanvas() {
         >
           {widgets.map((widget) => (
             <div key={widget.id} className="h-full">
-              <div className="drag-handle mb-2 flex cursor-grab items-center gap-2 rounded-md border border-zinc-700/90 bg-zinc-950/80 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-400 active:cursor-grabbing">
+              <div
+                className="drag-handle mb-2 flex cursor-grab items-center gap-2 rounded-md border border-zinc-700/90 bg-zinc-950/80 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-400 active:cursor-grabbing"
+                onMouseDown={() => selectWidget(widget.id)}
+                onTouchStart={() => selectWidget(widget.id)}
+              >
                 <span aria-hidden className="text-zinc-600">
                   ⋮⋮
                 </span>
@@ -95,6 +117,7 @@ export default function DashboardCanvas() {
                   widget={widget}
                   dataset={dataset}
                   isSelected={selectedWidgetId === widget.id}
+                  remoteEditors={remoteEditorsByWidgetId.get(widget.id) ?? []}
                   onSelect={selectWidget}
                   onRemove={removeWidget}
                   onDuplicate={duplicateWidget}
