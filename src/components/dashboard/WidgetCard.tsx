@@ -8,6 +8,7 @@ type WidgetCardProps = {
   isSelected: boolean
   onSelect: (widgetId: string) => void
   onRemove: (widgetId: string) => void
+  onDuplicate: (widgetId: string) => void
 }
 
 export default function WidgetCard({
@@ -16,6 +17,7 @@ export default function WidgetCard({
   isSelected,
   onSelect,
   onRemove,
+  onDuplicate,
 }: WidgetCardProps) {
   return (
     <article
@@ -29,27 +31,42 @@ export default function WidgetCard({
         }
       }}
       className={[
-        'flex h-full min-h-0 flex-col rounded-lg border bg-zinc-900 p-3 text-left transition',
-        isSelected ? 'border-indigo-400 shadow-[0_0_0_1px_rgba(129,140,248,0.45)]' : 'border-zinc-700 hover:border-zinc-500',
+        'flex h-full min-h-0 flex-col rounded-lg border bg-zinc-900/90 p-3 text-left shadow-sm transition',
+        isSelected
+          ? 'border-indigo-400 ring-2 ring-indigo-500/35'
+          : 'border-zinc-700 hover:border-zinc-500 hover:bg-zinc-900',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50',
       ].join(' ')}
     >
       <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-zinc-500">
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
             {widgetDisplayName(widget.type)}
           </p>
-          <h3 className="mt-1 text-sm font-medium text-zinc-100">{widget.title}</h3>
+          <h3 className="mt-1 truncate text-sm font-medium text-zinc-100">{widget.title}</h3>
         </div>
-        <button
-          type="button"
-          onClick={(event) => {
-            event.stopPropagation()
-            onRemove(widget.id)
-          }}
-          className="widget-action rounded border border-zinc-700 px-2 py-1 text-xs text-zinc-300 hover:border-zinc-500"
-        >
-          Remove
-        </button>
+        <div className="flex shrink-0 gap-1.5">
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation()
+              onDuplicate(widget.id)
+            }}
+            className="widget-action rounded border border-zinc-700 px-2 py-1 text-xs text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
+          >
+            Duplicate
+          </button>
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation()
+              onRemove(widget.id)
+            }}
+            className="widget-action rounded border border-zinc-700 px-2 py-1 text-xs text-zinc-300 transition hover:border-rose-500/60 hover:text-rose-200"
+          >
+            Remove
+          </button>
+        </div>
       </div>
 
       <div className="mt-3 min-h-0 flex-1">

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
+import DashboardLoadingSkeleton from '@/components/dashboard/DashboardLoadingSkeleton'
 import DashboardShell from '@/components/dashboard/DashboardShell'
 import { getDashboard } from '@/api/dashboards'
 import { useDashboardStore } from '@/stores/dashboardStore'
@@ -67,11 +68,7 @@ export default function DashboardPage() {
   }
 
   if (query.isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-zinc-400">
-        Loading dashboard…
-      </div>
-    )
+    return <DashboardLoadingSkeleton />
   }
 
   if (query.isError) {

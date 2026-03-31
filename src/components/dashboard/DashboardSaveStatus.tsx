@@ -43,10 +43,15 @@ export default function DashboardSaveStatus({
   }, [isDirty, isSaving, lastSavedAt])
 
   return (
-    <div className="flex items-center gap-2 text-sm tabular-nums">
+    <div
+      className="flex items-start gap-2 rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-sm tabular-nums"
+      role="status"
+      aria-live="polite"
+      aria-label={label.text}
+    >
       <span
         className={[
-          'inline-block size-2 rounded-full',
+          'mt-1.5 inline-block size-2 shrink-0 rounded-full',
           isSaving
             ? 'animate-pulse bg-amber-400'
             : isDirty
@@ -57,7 +62,12 @@ export default function DashboardSaveStatus({
         ].join(' ')}
         aria-hidden
       />
-      <span className={label.className}>{label.text}</span>
+      <div className="min-w-0">
+        <span className={label.className}>{label.text}</span>
+        <span className="mt-0.5 block text-[11px] font-normal text-zinc-500">
+          Autosaves when you pause editing
+        </span>
+      </div>
     </div>
   )
 }

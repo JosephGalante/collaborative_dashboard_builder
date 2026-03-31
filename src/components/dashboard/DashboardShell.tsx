@@ -1,18 +1,11 @@
 import { useEffect } from 'react'
 import DashboardCanvas from './DashboardCanvas'
+import DashboardRename from './DashboardRename'
 import DashboardSaveStatus from './DashboardSaveStatus'
 import LeftSidebar from '@/components/panels/LeftSidebar'
 import RightConfigPanel from '@/components/panels/RightConfigPanel'
+import { isEditableTarget } from '@/lib/dom/isEditableTarget'
 import { useDashboardStore } from '@/stores/dashboardStore'
-
-function DashboardTitleLine() {
-  const name = useDashboardStore((state) => state.name)
-  const isHydrated = useDashboardStore((state) => state.isHydrated)
-  if (!isHydrated) {
-    return null
-  }
-  return <div className="truncate text-xs text-zinc-500">{name}</div>
-}
 
 export default function DashboardShell() {
   const isDirty = useDashboardStore((state) => state.isDirty)
@@ -20,28 +13,46 @@ export default function DashboardShell() {
   const isSaving = useDashboardStore((state) => state.isSaving)
   const selectedWidgetId = useDashboardStore((state) => state.selectedWidgetId)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
+  const removeWidget = useDashboardStore((state) => state.removeWidget)
 
   useEffect(() => {
-    if (!selectedWidgetId) {
-      return
-    }
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isEditableTarget(event.target)) {
+        return
+      }
       if (event.key === 'Escape') {
-        selectWidget(null)
+        if (selectedWidgetId) {
+          event.preventDefault()
+          selectWidget(null)
+        }
+        return
+      }
+      if (
+        (event.key === 'Delete' || event.key === 'Backspace') &&
+        selectedWidgetId
+      ) {
+        event.preventDefault()
+        removeWidget(selectedWidgetId)
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [selectedWidgetId, selectWidget])
+  }, [selectedWidgetId, selectWidget, removeWidget])
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="flex h-14 items-center justify-between border-b border-zinc-800 px-4">
-        <div className="min-w-0">
-          <div className="truncate font-medium">Collaborative Dashboard Builder</div>
-          <DashboardTitleLine />
+      <header className="flex h-14 items-center justify-between gap-4 border-b border-zinc-800 px-4">
+        <div className="min-w-0 flex-1">
+          <div className="text-[13px] font-semibold tracking-tight text-zinc-100">
+            Collaborative Dashboard Builder
+          </div>
+          <DashboardRename />
         </div>
-        <DashboardSaveStatus isDirty={isDirty} lastSavedAt={lastSavedAt} isSaving={isSaving} />
+        <DashboardSaveStatus
+          isDirty={isDirty}
+          lastSavedAt={lastSavedAt}
+          isSaving={isSaving}
+        />
       </header>
 
       <main className="grid h-[calc(100vh-56px)] grid-cols-[240px_1fr_320px]">

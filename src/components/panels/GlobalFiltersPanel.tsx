@@ -26,7 +26,7 @@ export default function GlobalFiltersPanel() {
   }
 
   return (
-    <div className="mt-4 space-y-5">
+    <div className="space-y-5">
       <p className="text-xs text-zinc-500">
         Filters apply to all widgets. Empty asset selection means include all classes.
       </p>

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { createDashboard } from '@/api/dashboards'
+import DashboardLoadingSkeleton from '@/components/dashboard/DashboardLoadingSkeleton'
 
 export default function CreateDashboardPage() {
   const navigate = useNavigate()
@@ -42,9 +43,5 @@ export default function CreateDashboardPage() {
     )
   }
 
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-zinc-400">
-      Creating dashboard…
-    </div>
-  )
+  return <DashboardLoadingSkeleton caption="Creating dashboard…" />
 }

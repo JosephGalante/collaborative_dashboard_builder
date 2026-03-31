@@ -15,7 +15,7 @@ const widgetTypes: WidgetType[] = ['line', 'bar', 'stat']
 
 export default function WidgetConfigForm({ widget, updateWidget }: WidgetConfigFormProps) {
   return (
-    <div className="mt-4 space-y-5">
+    <div className="space-y-5">
       <div>
         <label htmlFor={`widget-title-${widget.id}`} className={labelClass}>
           Title

@@ -37,16 +37,20 @@ export default function DashboardCanvas() {
   const setLayouts = useDashboardStore((state) => state.setLayouts)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
+  const duplicateWidget = useDashboardStore((state) => state.duplicateWidget)
   const dataset = useDerivedSeedDataset(globalFilters)
 
   if (widgets.length === 0) {
     return (
       <section className="border-x border-zinc-800 p-4">
-        <div className="flex h-full items-center justify-center rounded-lg border border-dashed border-zinc-700 bg-zinc-900/60">
-          <div className="text-center">
-            <p className="text-lg font-medium text-zinc-200">Empty Dashboard</p>
-            <p className="mt-2 text-sm text-zinc-400">
-              Add your first widget from the left sidebar.
+        <div className="flex h-full min-h-[280px] items-center justify-center rounded-xl border border-dashed border-zinc-700/90 bg-zinc-900/40 px-6 py-12">
+          <div className="max-w-sm text-center">
+            <p className="text-base font-semibold tracking-tight text-zinc-100">
+              Start with a widget
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-zinc-400">
+              Use the library on the left to add a line chart, bar chart, or stat card. Drag the
+              handle on each tile to move it; resize from the corner.
             </p>
           </div>
         </div>
@@ -56,7 +60,7 @@ export default function DashboardCanvas() {
 
   return (
     <section className="border-x border-zinc-800 p-4">
-      <div className="h-full overflow-auto rounded-lg border border-zinc-800 bg-zinc-900/60 p-2">
+      <div className="h-full overflow-auto rounded-xl border border-zinc-800/90 bg-zinc-900/50 p-2 shadow-inner">
         <AutoWidthGridLayout
           className="layout"
           cols={12}
@@ -75,8 +79,11 @@ export default function DashboardCanvas() {
         >
           {widgets.map((widget) => (
             <div key={widget.id} className="h-full">
-              <div className="drag-handle mb-2 cursor-grab rounded border border-zinc-700 px-2 py-1 text-xs text-zinc-400 active:cursor-grabbing">
-                Drag
+              <div className="drag-handle mb-2 flex cursor-grab items-center gap-2 rounded-md border border-zinc-700/90 bg-zinc-950/80 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-400 active:cursor-grabbing">
+                <span aria-hidden className="text-zinc-600">
+                  ⋮⋮
+                </span>
+                Move
               </div>
               <div className="h-[calc(100%-34px)]">
                 <WidgetCard
@@ -85,6 +92,7 @@ export default function DashboardCanvas() {
                   isSelected={selectedWidgetId === widget.id}
                   onSelect={selectWidget}
                   onRemove={removeWidget}
+                  onDuplicate={duplicateWidget}
                 />
               </div>
             </div>
