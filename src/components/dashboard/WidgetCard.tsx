@@ -25,6 +25,7 @@ export default function WidgetCard({
 
   return (
     <article
+      data-widget-card="true"
       role="button"
       tabIndex={0}
       onClick={() => onSelect(widget.id)}
@@ -35,7 +36,7 @@ export default function WidgetCard({
         }
       }}
       className={[
-        'flex h-full min-h-0 flex-col rounded-lg border bg-zinc-900/90 p-3 text-left shadow-sm transition',
+        'relative flex h-full min-h-0 flex-col rounded-lg border bg-zinc-900/90 p-3 text-left shadow-sm transition',
         isSelected
           ? 'border-indigo-400 ring-2 ring-indigo-500/35'
           : hasRemoteEditors
@@ -44,8 +45,32 @@ export default function WidgetCard({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50',
       ].join(' ')}
     >
+      <button
+        type="button"
+        onMouseDown={(event) => {
+          event.stopPropagation()
+          onSelect(widget.id)
+        }}
+        onTouchStart={(event) => {
+          event.stopPropagation()
+          onSelect(widget.id)
+        }}
+        className="drag-handle widget-action absolute left-2 top-2 inline-flex cursor-grab items-center justify-center rounded border border-zinc-700/90 bg-zinc-950/80 px-1.5 py-1 text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-300 active:cursor-grabbing"
+        aria-label="Drag widget"
+        title="Drag widget"
+      >
+        <span className="grid grid-cols-2 gap-[2px]" aria-hidden>
+          <span className="size-1 rounded-full bg-current" />
+          <span className="size-1 rounded-full bg-current" />
+          <span className="size-1 rounded-full bg-current" />
+          <span className="size-1 rounded-full bg-current" />
+          <span className="size-1 rounded-full bg-current" />
+          <span className="size-1 rounded-full bg-current" />
+        </span>
+      </button>
+
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
+        <div className="min-w-0 pl-8">
           <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
             {widgetDisplayName(widget.type)}
           </p>

@@ -86,7 +86,10 @@ export default function GlobalFiltersPanel() {
         <legend className="px-1 text-xs font-medium text-zinc-500">Asset classes</legend>
         <div className="flex flex-col gap-2">
           {assetClassOptions.map((opt) => (
-            <label key={opt.value} className="flex cursor-pointer items-center gap-2 text-sm text-zinc-300">
+            <label
+              key={opt.value}
+              className="flex cursor-pointer items-center gap-2 text-sm text-zinc-300"
+            >
               <input
                 type="checkbox"
                 checked={assetClasses.includes(opt.value)}

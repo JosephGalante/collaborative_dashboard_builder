@@ -9,17 +9,25 @@ import { useDashboardStore } from '@/stores/dashboardStore'
  */
 const TAB_USER_KEY = 'cdb-presence-tab-user'
 
-const palette = ['#818cf8', '#22d3ee', '#34d399', '#f472b6', '#f59e0b', '#fb7185']
-
 function randomLabel() {
   return `Analyst ${Math.floor(Math.random() * 900 + 100)}`
 }
 
+function colorFromUserId(userId: string) {
+  let hash = 0
+  for (let i = 0; i < userId.length; i += 1) {
+    hash = (hash * 31 + userId.charCodeAt(i)) >>> 0
+  }
+  const hue = hash % 360
+  return `hsl(${hue} 78% 62%)`
+}
+
 function createUser(): PresenceUser {
+  const userId = crypto.randomUUID()
   return {
-    userId: crypto.randomUUID(),
+    userId,
     name: randomLabel(),
-    color: palette[Math.floor(Math.random() * palette.length)] ?? '#818cf8',
+    color: colorFromUserId(userId),
   }
 }
 
@@ -166,7 +174,18 @@ export function useDashboardSocket(dashboardId: string | undefined) {
       }
       resetPresence()
     }
-  }, [dashboardId, valid, resetPresence, setConnectionStatus, setCurrentUser, setSnapshot, upsertUser, removeUser, updateCursor, updateSelection])
+  }, [
+    dashboardId,
+    valid,
+    resetPresence,
+    setConnectionStatus,
+    setCurrentUser,
+    setSnapshot,
+    upsertUser,
+    removeUser,
+    updateCursor,
+    updateSelection,
+  ])
 
   useEffect(() => {
     if (!dashboardId || !currentUser) {

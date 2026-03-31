@@ -42,14 +42,9 @@ export const usePresenceStore = create<PresenceStore>((set) => ({
   setSnapshot: (snapshot) =>
     set({
       users: snapshot.users,
-      cursors: Object.fromEntries(
-        snapshot.cursors.map((cursor) => [cursor.userId, cursor]),
-      ),
+      cursors: Object.fromEntries(snapshot.cursors.map((cursor) => [cursor.userId, cursor])),
       selections: Object.fromEntries(
-        snapshot.selections.map((selection) => [
-          selection.userId,
-          selection.selectedWidgetId,
-        ]),
+        snapshot.selections.map((selection) => [selection.userId, selection.selectedWidgetId]),
       ),
     }),
 

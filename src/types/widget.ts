@@ -19,11 +19,7 @@ export type DateRangeFilter = {
   to: string | null
 }
 
-export type AssetClass =
-  | 'equities'
-  | 'fixed_income'
-  | 'cash'
-  | 'alternatives'
+export type AssetClass = 'equities' | 'fixed_income' | 'cash' | 'alternatives'
 
 export type GlobalFilters = {
   dateRange: DateRangeFilter

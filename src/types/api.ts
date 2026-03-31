@@ -29,9 +29,7 @@ export type ListDashboardsResponse = {
 }
 
 export type DashboardApiClient = {
-  createDashboard: (
-    input: CreateDashboardRequest,
-  ) => Promise<CreateDashboardResponse>
+  createDashboard: (input: CreateDashboardRequest) => Promise<CreateDashboardResponse>
   getDashboard: (id: DashboardId) => Promise<GetDashboardResponse>
   updateDashboard: (
     id: DashboardId,

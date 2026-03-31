@@ -13,6 +13,7 @@
     "lint": "eslint . && npm run check:server",
     "preview": "vite preview",
     "syntax": "tsc --noEmit",
+    "format": "prettier --write .",
     "code": "npm run syntax && npm run lint && npm run format"
   },
   "dependencies": {
@@ -45,6 +46,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
     "postcss": "^8.5.8",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4.2.2",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",

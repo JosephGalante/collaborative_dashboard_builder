@@ -1,9 +1,10 @@
 import type { Dashboard } from '@/types/dashboard'
 import type { GlobalFilters, Widget, WidgetLayout } from '@/types/widget'
 
-const apiBase = typeof import.meta.env.VITE_API_BASE_URL === 'string'
-  ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
-  : ''
+const apiBase =
+  typeof import.meta.env.VITE_API_BASE_URL === 'string'
+    ? import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')
+    : ''
 
 function apiUrl(path: string): string {
   const p = path.startsWith('/') ? path : `/${path}`

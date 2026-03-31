@@ -59,9 +59,13 @@ export default function WidgetConfigForm({ widget, updateWidget }: WidgetConfigF
         </p>
       </div>
 
-      {widget.type === 'line' ? <LineConfigFields widget={widget} updateWidget={updateWidget} /> : null}
+      {widget.type === 'line' ? (
+        <LineConfigFields widget={widget} updateWidget={updateWidget} />
+      ) : null}
       {widget.type === 'bar' ? <BarConfigFields /> : null}
-      {widget.type === 'stat' ? <StatConfigFields widget={widget} updateWidget={updateWidget} /> : null}
+      {widget.type === 'stat' ? (
+        <StatConfigFields widget={widget} updateWidget={updateWidget} />
+      ) : null}
     </div>
   )
 }
@@ -120,8 +124,9 @@ function BarConfigFields() {
     <fieldset className="space-y-3 rounded-md border border-zinc-800 p-3">
       <legend className="px-1 text-xs font-medium text-zinc-500">Bar chart</legend>
       <p className="text-xs text-zinc-500">
-        This widget uses the asset allocation dataset with category <code className="text-zinc-400">assetClass</code>{' '}
-        and value <code className="text-zinc-400">marketValue</code>. Those fields are fixed for this MVP.
+        This widget uses the asset allocation dataset with category{' '}
+        <code className="text-zinc-400">assetClass</code> and value{' '}
+        <code className="text-zinc-400">marketValue</code>. Those fields are fixed for this MVP.
       </p>
     </fieldset>
   )

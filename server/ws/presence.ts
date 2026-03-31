@@ -60,6 +60,15 @@ type WsLike = {
 const rooms = new Map<string, PresenceRoom>()
 const socketMeta = new WeakMap<WsLike, { dashboardId: string; userId: string }>()
 
+function colorFromUserId(userId: string): string {
+  let hash = 0
+  for (let i = 0; i < userId.length; i += 1) {
+    hash = (hash * 31 + userId.charCodeAt(i)) >>> 0
+  }
+  const hue = hash % 360
+  return `hsl(${hue} 78% 62%)`
+}
+
 function getRoom(dashboardId: string): PresenceRoom {
   const existing = rooms.get(dashboardId)
   if (existing) return existing
@@ -142,7 +151,14 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
         const { dashboardId } = event.payload
         const room = getRoom(dashboardId)
         const nextUser = hasConnectedUser(room, event.payload.user.userId)
-          ? { ...event.payload.user, userId: randomUUID() }
+          ? (() => {
+              const userId = randomUUID()
+              return {
+                ...event.payload.user,
+                userId,
+                color: colorFromUserId(userId),
+              }
+            })()
           : event.payload.user
         room.sockets.add(socket)
         room.users.set(nextUser.userId, nextUser)
@@ -160,9 +176,10 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
           payload: {
             users: Array.from(room.users.values()),
             cursors: Array.from(room.cursors.values()),
-            selections: Array.from(room.selections.entries()).map(
-              ([userId, selectedWidgetId]) => ({ userId, selectedWidgetId }),
-            ),
+            selections: Array.from(room.selections.entries()).map(([userId, selectedWidgetId]) => ({
+              userId,
+              selectedWidgetId,
+            })),
           },
         })
 

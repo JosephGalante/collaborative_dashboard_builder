@@ -81,6 +81,18 @@ export default function DashboardCanvas() {
     <section className="border-x border-zinc-800 p-4">
       <div
         data-dashboard-canvas="true"
+        onMouseDown={(event) => {
+          const target = event.target as HTMLElement
+          if (
+            target.closest('[data-widget-card="true"]') ||
+            target.closest('.drag-handle') ||
+            target.closest('.widget-action') ||
+            target.closest('.react-resizable-handle')
+          ) {
+            return
+          }
+          selectWidget(null)
+        }}
         className="relative h-full overflow-auto rounded-xl border border-zinc-800/90 bg-zinc-900/50 p-2 shadow-inner"
       >
         <RemoteCursorLayer />
@@ -102,27 +114,15 @@ export default function DashboardCanvas() {
         >
           {widgets.map((widget) => (
             <div key={widget.id} className="h-full">
-              <div
-                className="drag-handle mb-2 flex cursor-grab items-center gap-2 rounded-md border border-zinc-700/90 bg-zinc-950/80 px-2 py-1.5 text-[11px] font-medium uppercase tracking-wide text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-400 active:cursor-grabbing"
-                onMouseDown={() => selectWidget(widget.id)}
-                onTouchStart={() => selectWidget(widget.id)}
-              >
-                <span aria-hidden className="text-zinc-600">
-                  ⋮⋮
-                </span>
-                Move
-              </div>
-              <div className="h-[calc(100%-34px)]">
-                <WidgetCard
-                  widget={widget}
-                  dataset={dataset}
-                  isSelected={selectedWidgetId === widget.id}
-                  remoteEditors={remoteEditorsByWidgetId.get(widget.id) ?? []}
-                  onSelect={selectWidget}
-                  onRemove={removeWidget}
-                  onDuplicate={duplicateWidget}
-                />
-              </div>
+              <WidgetCard
+                widget={widget}
+                dataset={dataset}
+                isSelected={selectedWidgetId === widget.id}
+                remoteEditors={remoteEditorsByWidgetId.get(widget.id) ?? []}
+                onSelect={selectWidget}
+                onRemove={removeWidget}
+                onDuplicate={duplicateWidget}
+              />
             </div>
           ))}
         </AutoWidthGridLayout>

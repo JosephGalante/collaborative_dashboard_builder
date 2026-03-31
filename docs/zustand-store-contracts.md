@@ -6,78 +6,78 @@ Use two stores by default (`dashboardStore`, `presenceStore`), with optional `ui
 
 ```ts
 type DashboardStore = {
-  dashboardId: DashboardId | null;
-  name: string;
-  widgets: Widget[];
-  layouts: WidgetLayout[];
-  globalFilters: GlobalFilters;
+  dashboardId: DashboardId | null
+  name: string
+  widgets: Widget[]
+  layouts: WidgetLayout[]
+  globalFilters: GlobalFilters
 
-  selectedWidgetId: WidgetId | null;
-  isHydrated: boolean;
-  isDirty: boolean;
-  lastSavedAt: string | null;
+  selectedWidgetId: WidgetId | null
+  isHydrated: boolean
+  isDirty: boolean
+  lastSavedAt: string | null
 
-  hydrateFromDashboard: (dashboard: Dashboard) => void;
+  hydrateFromDashboard: (dashboard: Dashboard) => void
 
-  setDashboardName: (name: string) => void;
+  setDashboardName: (name: string) => void
 
-  addWidget: (widgetType: WidgetType) => void;
-  updateWidget: (widgetId: WidgetId, updater: (widget: Widget) => Widget) => void;
-  removeWidget: (widgetId: WidgetId) => void;
-  duplicateWidget: (widgetId: WidgetId) => void;
+  addWidget: (widgetType: WidgetType) => void
+  updateWidget: (widgetId: WidgetId, updater: (widget: Widget) => Widget) => void
+  removeWidget: (widgetId: WidgetId) => void
+  duplicateWidget: (widgetId: WidgetId) => void
 
-  setLayouts: (layouts: WidgetLayout[]) => void;
-  updateLayoutItem: (widgetId: WidgetId, patch: Partial<WidgetLayout>) => void;
+  setLayouts: (layouts: WidgetLayout[]) => void
+  updateLayoutItem: (widgetId: WidgetId, patch: Partial<WidgetLayout>) => void
 
-  setGlobalFilters: (filters: Partial<GlobalFilters>) => void;
+  setGlobalFilters: (filters: Partial<GlobalFilters>) => void
 
-  selectWidget: (widgetId: WidgetId | null) => void;
+  selectWidget: (widgetId: WidgetId | null) => void
 
-  markSaved: (savedAt: string) => void;
-  markDirty: () => void;
-  resetDirty: () => void;
-};
+  markSaved: (savedAt: string) => void
+  markDirty: () => void
+  resetDirty: () => void
+}
 ```
 
 ## `presenceStore` Shape
 
 ```ts
 type PresenceStore = {
-  connectionStatus: 'disconnected' | 'connecting' | 'connected';
+  connectionStatus: 'disconnected' | 'connecting' | 'connected'
 
-  currentUser: PresenceUser | null;
-  users: PresenceUser[];
-  cursors: Record<UserId, RemoteCursor>;
-  selections: Record<UserId, WidgetId | null>;
+  currentUser: PresenceUser | null
+  users: PresenceUser[]
+  cursors: Record<UserId, RemoteCursor>
+  selections: Record<UserId, WidgetId | null>
 
-  setConnectionStatus: (status: PresenceStore['connectionStatus']) => void;
-  setCurrentUser: (user: PresenceUser) => void;
+  setConnectionStatus: (status: PresenceStore['connectionStatus']) => void
+  setCurrentUser: (user: PresenceUser) => void
 
-  setSnapshot: (snapshot: PresenceStateSnapshot) => void;
+  setSnapshot: (snapshot: PresenceStateSnapshot) => void
 
-  upsertUser: (user: PresenceUser) => void;
-  removeUser: (userId: UserId) => void;
+  upsertUser: (user: PresenceUser) => void
+  removeUser: (userId: UserId) => void
 
-  updateCursor: (cursor: RemoteCursor) => void;
-  removeCursor: (userId: UserId) => void;
+  updateCursor: (cursor: RemoteCursor) => void
+  removeCursor: (userId: UserId) => void
 
-  updateSelection: (selection: UserSelection) => void;
-  clearSelection: (userId: UserId) => void;
+  updateSelection: (selection: UserSelection) => void
+  clearSelection: (userId: UserId) => void
 
-  resetPresence: () => void;
-};
+  resetPresence: () => void
+}
 ```
 
 ## Optional `uiStore` Shape
 
 ```ts
 type UiStore = {
-  rightPanelTab: 'widget' | 'filters';
-  isLeftSidebarOpen: boolean;
+  rightPanelTab: 'widget' | 'filters'
+  isLeftSidebarOpen: boolean
 
-  setRightPanelTab: (tab: UiStore['rightPanelTab']) => void;
-  setLeftSidebarOpen: (open: boolean) => void;
-};
+  setRightPanelTab: (tab: UiStore['rightPanelTab']) => void
+  setLeftSidebarOpen: (open: boolean) => void
+}
 ```
 
 ## Behavior Details
@@ -101,7 +101,7 @@ Default templates:
 
 ```ts
 function createDefaultWidget(type: WidgetType): Widget {
-  const id = crypto.randomUUID();
+  const id = crypto.randomUUID()
 
   if (type === 'line') {
     return {
@@ -113,7 +113,7 @@ function createDefaultWidget(type: WidgetType): Widget {
         xField: 'date',
         yField: 'portfolioValue',
       },
-    };
+    }
   }
 
   if (type === 'bar') {
@@ -126,7 +126,7 @@ function createDefaultWidget(type: WidgetType): Widget {
         categoryField: 'assetClass',
         valueField: 'marketValue',
       },
-    };
+    }
   }
 
   return {
@@ -138,7 +138,7 @@ function createDefaultWidget(type: WidgetType): Widget {
       statKey: 'totalValue',
       format: 'currency',
     },
-  };
+  }
 }
 ```
 

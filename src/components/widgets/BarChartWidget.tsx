@@ -1,13 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import type { BarWidget, SeedDataset } from '@/types/widget'
 import { formatAssetClassLabel } from '@/lib/charts/formatStatValue'
 import WidgetChartSkeleton from './WidgetChartSkeleton'
@@ -76,7 +68,11 @@ export default function BarChartWidget({ widget, dataset }: BarChartWidgetProps)
             formatter={(value) => {
               const n = typeof value === 'number' ? value : Number(value)
               return [
-                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n),
+                new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: 'USD',
+                  maximumFractionDigits: 0,
+                }).format(n),
                 'Market value',
               ]
             }}

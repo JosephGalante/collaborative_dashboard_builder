@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import DashboardCanvas from './DashboardCanvas'
 import DashboardRename from './DashboardRename'
 import DashboardSaveStatus from './DashboardSaveStatus'
@@ -15,6 +15,8 @@ export default function DashboardShell() {
   const selectedWidgetId = useDashboardStore((state) => state.selectedWidgetId)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
+  const [leftCollapsed, setLeftCollapsed] = useState(false)
+  const [rightCollapsed, setRightCollapsed] = useState(false)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -28,10 +30,7 @@ export default function DashboardShell() {
         }
         return
       }
-      if (
-        (event.key === 'Delete' || event.key === 'Backspace') &&
-        selectedWidgetId
-      ) {
+      if ((event.key === 'Delete' || event.key === 'Backspace') && selectedWidgetId) {
         event.preventDefault()
         removeWidget(selectedWidgetId)
       }
@@ -51,18 +50,22 @@ export default function DashboardShell() {
         </div>
         <div className="flex items-center gap-2">
           <PresenceStatus />
-          <DashboardSaveStatus
-            isDirty={isDirty}
-            lastSavedAt={lastSavedAt}
-            isSaving={isSaving}
-          />
+          <DashboardSaveStatus isDirty={isDirty} lastSavedAt={lastSavedAt} isSaving={isSaving} />
         </div>
       </header>
 
-      <main className="grid h-[calc(100vh-56px)] grid-cols-[240px_1fr_320px]">
-        <LeftSidebar />
+      <main
+        className="grid h-[calc(100vh-56px)] transition-[grid-template-columns] duration-200"
+        style={{
+          gridTemplateColumns: `${leftCollapsed ? '64px' : '240px'} 1fr ${rightCollapsed ? '64px' : '320px'}`,
+        }}
+      >
+        <LeftSidebar collapsed={leftCollapsed} onToggle={() => setLeftCollapsed((prev) => !prev)} />
         <DashboardCanvas />
-        <RightConfigPanel />
+        <RightConfigPanel
+          collapsed={rightCollapsed}
+          onToggle={() => setRightCollapsed((prev) => !prev)}
+        />
       </main>
     </div>
   )

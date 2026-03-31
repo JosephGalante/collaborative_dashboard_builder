@@ -75,7 +75,11 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
               const n = typeof value === 'number' ? value : Number(value)
               const formatted =
                 widget.config.yField === 'portfolioValue'
-                  ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n)
+                  ? new Intl.NumberFormat('en-US', {
+                      style: 'currency',
+                      currency: 'USD',
+                      maximumFractionDigits: 0,
+                    }).format(n)
                   : new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n)
               return [formatted, widget.config.yField === 'netFlows' ? 'Net flows' : 'Value']
             }}

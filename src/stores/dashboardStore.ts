@@ -84,9 +84,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
 
   updateWidget: (widgetId, updater) =>
     set((state) => ({
-      widgets: state.widgets.map((widget) =>
-        widget.id === widgetId ? updater(widget) : widget,
-      ),
+      widgets: state.widgets.map((widget) => (widget.id === widgetId ? updater(widget) : widget)),
       isDirty: true,
     })),
 
@@ -94,8 +92,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
     set((state) => ({
       widgets: state.widgets.filter((widget) => widget.id !== widgetId),
       layouts: state.layouts.filter((layout) => layout.i !== widgetId),
-      selectedWidgetId:
-        state.selectedWidgetId === widgetId ? null : state.selectedWidgetId,
+      selectedWidgetId: state.selectedWidgetId === widgetId ? null : state.selectedWidgetId,
       isDirty: true,
     })),
 
@@ -107,7 +104,11 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       }
 
       const sourceLayout = state.layouts.find((layout) => layout.i === widgetId)
-      const clonedWidget = { ...sourceWidget, id: crypto.randomUUID(), title: `${sourceWidget.title} Copy` }
+      const clonedWidget = {
+        ...sourceWidget,
+        id: crypto.randomUUID(),
+        title: `${sourceWidget.title} Copy`,
+      }
       const clonedLayout: WidgetLayout = sourceLayout
         ? { ...sourceLayout, i: clonedWidget.id, x: sourceLayout.x + 1, y: sourceLayout.y + 1 }
         : createDefaultLayout(clonedWidget.id, state.layouts.length)

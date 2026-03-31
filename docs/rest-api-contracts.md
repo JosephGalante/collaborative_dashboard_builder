@@ -10,16 +10,16 @@ Creates a new dashboard.
 
 ```ts
 export type CreateDashboardRequest = {
-  name?: string;
-};
+  name?: string
+}
 ```
 
 ### Response
 
 ```ts
 export type CreateDashboardResponse = {
-  dashboard: Dashboard;
-};
+  dashboard: Dashboard
+}
 ```
 
 ### Behavior
@@ -35,8 +35,8 @@ Fetch one dashboard.
 
 ```ts
 export type GetDashboardResponse = {
-  dashboard: Dashboard;
-};
+  dashboard: Dashboard
+}
 ```
 
 ### Errors
@@ -51,19 +51,19 @@ Full overwrite update for persisted dashboard shape.
 
 ```ts
 export type UpdateDashboardRequest = {
-  name: string;
-  widgets: Widget[];
-  layouts: WidgetLayout[];
-  globalFilters: GlobalFilters;
-};
+  name: string
+  widgets: Widget[]
+  layouts: WidgetLayout[]
+  globalFilters: GlobalFilters
+}
 ```
 
 ### Response
 
 ```ts
 export type UpdateDashboardResponse = {
-  dashboard: Dashboard;
-};
+  dashboard: Dashboard
+}
 ```
 
 ### Behavior
@@ -79,10 +79,8 @@ Add only for a simple dashboard listing page.
 
 ```ts
 export type ListDashboardsResponse = {
-  dashboards: Array<
-    Pick<Dashboard, 'id' | 'name' | 'createdAt' | 'updatedAt'>
-  >;
-};
+  dashboards: Array<Pick<Dashboard, 'id' | 'name' | 'createdAt' | 'updatedAt'>>
+}
 ```
 
 ## Validation Rules (Zod)
@@ -100,15 +98,13 @@ Enforce at API boundary:
 
 ```ts
 export async function createDashboard(
-  input: CreateDashboardRequest
+  input: CreateDashboardRequest,
 ): Promise<CreateDashboardResponse> {}
 
-export async function getDashboard(
-  id: DashboardId
-): Promise<GetDashboardResponse> {}
+export async function getDashboard(id: DashboardId): Promise<GetDashboardResponse> {}
 
 export async function updateDashboard(
   id: DashboardId,
-  input: UpdateDashboardRequest
+  input: UpdateDashboardRequest,
 ): Promise<UpdateDashboardResponse> {}
 ```
