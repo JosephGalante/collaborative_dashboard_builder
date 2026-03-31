@@ -1,5 +1,5 @@
 import GridLayout, {WidthProvider} from 'react-grid-layout/legacy'
-import {useMemo} from 'react'
+import {useMemo, useRef, useState} from 'react'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
@@ -10,16 +10,18 @@ import {usePresenceStore} from '@/stores/presenceStore'
 
 const AutoWidthGridLayout = WidthProvider(GridLayout)
 
+type LayoutItem = {
+  i: string
+  x: number
+  y: number
+  w: number
+  h: number
+  minW?: number
+  minH?: number
+}
+
 function normalizeLayouts(
-  nextLayouts: ReadonlyArray<{
-    i: string
-    x: number
-    y: number
-    w: number
-    h: number
-    minW?: number
-    minH?: number
-  }>,
+  nextLayouts: ReadonlyArray<LayoutItem>,
 ) {
   return nextLayouts.map((layout) => ({
     i: layout.i,
@@ -30,6 +32,72 @@ function normalizeLayouts(
     minW: layout.minW,
     minH: layout.minH,
   }))
+}
+
+function maybeSwapHorizontalNeighbor(
+  previousLayouts: LayoutItem[],
+  nextLayouts: LayoutItem[],
+  oldItem: LayoutItem,
+  newItem: LayoutItem,
+) {
+  const deltaX = newItem.x - oldItem.x
+  const deltaY = newItem.y - oldItem.y
+  const horizontalMove = deltaX !== 0 && Math.abs(deltaX) >= Math.abs(deltaY)
+  if (!horizontalMove) {
+    return nextLayouts
+  }
+
+  const direction = deltaX > 0 ? 1 : -1
+  const rowItems = previousLayouts
+    .filter((layout) => layout.y === oldItem.y && layout.h === oldItem.h && layout.w === oldItem.w)
+    .sort((a, b) => a.x - b.x)
+
+  const oldIndex = rowItems.findIndex((layout) => layout.i === oldItem.i)
+  if (oldIndex === -1) {
+    return nextLayouts
+  }
+
+  const sameRowNeighbors = rowItems.filter((layout) => {
+    if (layout.i === oldItem.i) {
+      return false
+    }
+    return direction === 1 ? layout.x > oldItem.x : layout.x < oldItem.x
+  })
+
+  const targetNeighbor = sameRowNeighbors.sort((a, b) =>
+    direction === 1 ? a.x - b.x : b.x - a.x,
+  )[0]
+
+  if (!targetNeighbor) {
+    return nextLayouts
+  }
+
+  const draggedCenter = newItem.x + newItem.w / 2
+  const neighborCenter = targetNeighbor.x + targetNeighbor.w / 2
+  const crossedNeighbor =
+    direction === 1 ? draggedCenter >= neighborCenter : draggedCenter <= neighborCenter
+
+  if (!crossedNeighbor) {
+    return nextLayouts
+  }
+
+  const targetIndex = rowItems.findIndex((layout) => layout.i === targetNeighbor.i)
+  if (targetIndex === -1) {
+    return nextLayouts
+  }
+
+  const reorderedRow = [...rowItems]
+  const [movedItem] = reorderedRow.splice(oldIndex, 1)
+  if (!movedItem) {
+    return nextLayouts
+  }
+  reorderedRow.splice(targetIndex, 0, movedItem)
+
+  const nextRowLayouts = new Map(
+    reorderedRow.map((layout, index) => [layout.i, {...layout, x: rowItems[index]?.x ?? layout.x}]),
+  )
+
+  return previousLayouts.map((layout) => nextRowLayouts.get(layout.i) ?? {...layout})
 }
 
 export default function DashboardCanvas() {
@@ -45,6 +113,9 @@ export default function DashboardCanvas() {
   const selections = usePresenceStore((state) => state.selections)
   const currentUser = usePresenceStore((state) => state.currentUser)
   const dataset = useDerivedSeedDataset(globalFilters)
+  const dragStartLayoutsRef = useRef<LayoutItem[]>([])
+  const [dragPreviewLayouts, setDragPreviewLayouts] = useState<LayoutItem[] | null>(null)
+  const activeLayouts = dragPreviewLayouts ?? layouts
 
   const remoteEditorsByWidgetId = useMemo(() => {
     const byWidgetId = new Map<string, Array<{userId: string; name: string; color: string}>>()
@@ -101,15 +172,46 @@ export default function DashboardCanvas() {
           cols={12}
           rowHeight={32}
           margin={[12, 12]}
-          compactType={null}
+          compactType="vertical"
           resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
           draggableHandle=".drag-handle"
           draggableCancel=".widget-action"
-          layout={layouts}
-          onDragStop={(nextLayouts) => {
-            setLayouts(normalizeLayouts(nextLayouts))
+          layout={activeLayouts}
+          onDragStart={() => {
+            dragStartLayoutsRef.current = normalizeLayouts(layouts)
+            setDragPreviewLayouts(normalizeLayouts(layouts))
+          }}
+          onDrag={(nextLayouts, oldItem, newItem) => {
+            if (!oldItem || !newItem) {
+              setDragPreviewLayouts(normalizeLayouts(nextLayouts))
+              return
+            }
+            setDragPreviewLayouts(
+              maybeSwapHorizontalNeighbor(
+                dragStartLayoutsRef.current,
+                normalizeLayouts(nextLayouts),
+                oldItem,
+                newItem,
+              ),
+            )
+          }}
+          onDragStop={(nextLayouts, oldItem, newItem) => {
+            if (!oldItem || !newItem) {
+              setDragPreviewLayouts(null)
+              setLayouts(normalizeLayouts(nextLayouts))
+              return
+            }
+            const adjustedLayouts = maybeSwapHorizontalNeighbor(
+              dragStartLayoutsRef.current,
+              normalizeLayouts(nextLayouts),
+              oldItem,
+              newItem,
+            )
+            setDragPreviewLayouts(null)
+            setLayouts(normalizeLayouts(adjustedLayouts))
           }}
           onResizeStop={(nextLayouts) => {
+            setDragPreviewLayouts(null)
             setLayouts(normalizeLayouts(nextLayouts))
           }}
         >

@@ -16,6 +16,19 @@ export function createDefaultWidget(type: WidgetType): Widget {
     }
   }
 
+  if (type === 'area') {
+    return {
+      id,
+      type: 'area',
+      title: 'Portfolio Area Trend',
+      config: {
+        datasetKey: 'portfolioTimeseries',
+        xField: 'date',
+        yField: 'portfolioValue',
+      },
+    }
+  }
+
   if (type === 'bar') {
     return {
       id,
@@ -25,6 +38,96 @@ export function createDefaultWidget(type: WidgetType): Widget {
         datasetKey: 'assetAllocation',
         categoryField: 'assetClass',
         valueField: 'marketValue',
+      },
+    }
+  }
+
+  if (type === 'donut') {
+    return {
+      id,
+      type: 'donut',
+      title: 'Allocation Breakdown',
+      config: {
+        datasetKey: 'assetAllocation',
+        categoryField: 'assetClass',
+        valueField: 'marketValue',
+      },
+    }
+  }
+
+  if (type === 'summary') {
+    return {
+      id,
+      type: 'summary',
+      title: 'Performance Summary',
+      config: {
+        datasetKey: 'performanceStats',
+      },
+    }
+  }
+
+  if (type === 'allocationList') {
+    return {
+      id,
+      type: 'allocationList',
+      title: 'Allocation List',
+      config: {
+        datasetKey: 'assetAllocation',
+      },
+    }
+  }
+
+  if (type === 'timeline') {
+    return {
+      id,
+      type: 'timeline',
+      title: 'Recent Activity',
+      config: {
+        datasetKey: 'portfolioTimeseries',
+      },
+    }
+  }
+
+  if (type === 'insight') {
+    return {
+      id,
+      type: 'insight',
+      title: 'Analyst Insight',
+      config: {
+        datasetKey: 'performanceStats',
+      },
+    }
+  }
+
+  if (type === 'metricPair') {
+    return {
+      id,
+      type: 'metricPair',
+      title: 'Metric Pair',
+      config: {
+        datasetKey: 'performanceStats',
+      },
+    }
+  }
+
+  if (type === 'allocationSpotlight') {
+    return {
+      id,
+      type: 'allocationSpotlight',
+      title: 'Allocation Spotlight',
+      config: {
+        datasetKey: 'assetAllocation',
+      },
+    }
+  }
+
+  if (type === 'healthBanner') {
+    return {
+      id,
+      type: 'healthBanner',
+      title: 'Health Banner',
+      config: {
+        datasetKey: 'performanceStats',
       },
     }
   }
@@ -56,10 +159,11 @@ export function reassignWidgetType(widget: Widget, newType: WidgetType): Widget 
   }
 }
 
-export function createDefaultLayout(itemId: WidgetId, index: number): WidgetLayout {
+export function createDefaultLayout(itemId: WidgetId, index: number, type?: WidgetType): WidgetLayout {
   const columns = 12
   const itemWidth = 4
-  const itemHeight = 7
+  const itemHeight = type === 'timeline' ? 10 : 7
+  const minHeight = type === 'timeline' ? 8 : 5
   const itemsPerRow = columns / itemWidth
 
   return {
@@ -69,6 +173,6 @@ export function createDefaultLayout(itemId: WidgetId, index: number): WidgetLayo
     x: (index % itemsPerRow) * itemWidth,
     y: Math.floor(index / itemsPerRow) * itemHeight,
     minW: 3,
-    minH: 5,
+    minH: minHeight,
   }
 }

@@ -2,7 +2,19 @@ export type DashboardId = string
 export type WidgetId = string
 export type UserId = string
 
-export type WidgetType = 'line' | 'bar' | 'stat'
+export type WidgetType =
+  | 'line'
+  | 'area'
+  | 'bar'
+  | 'donut'
+  | 'stat'
+  | 'summary'
+  | 'allocationList'
+  | 'timeline'
+  | 'insight'
+  | 'metricPair'
+  | 'allocationSpotlight'
+  | 'healthBanner'
 
 export type WidgetLayout = {
   i: WidgetId
@@ -61,7 +73,19 @@ export type LineWidgetConfig = {
   yField: 'portfolioValue' | 'netFlows'
 }
 
+export type AreaWidgetConfig = {
+  datasetKey: 'portfolioTimeseries'
+  xField: 'date'
+  yField: 'portfolioValue' | 'netFlows'
+}
+
 export type BarWidgetConfig = {
+  datasetKey: 'assetAllocation'
+  categoryField: 'assetClass'
+  valueField: 'marketValue'
+}
+
+export type DonutWidgetConfig = {
   datasetKey: 'assetAllocation'
   categoryField: 'assetClass'
   valueField: 'marketValue'
@@ -73,9 +97,42 @@ export type StatWidgetConfig = {
   format: 'currency' | 'percent' | 'number'
 }
 
+export type SummaryWidgetConfig = {
+  datasetKey: 'performanceStats'
+}
+
+export type AllocationListWidgetConfig = {
+  datasetKey: 'assetAllocation'
+}
+
+export type TimelineWidgetConfig = {
+  datasetKey: 'portfolioTimeseries'
+}
+
+export type InsightWidgetConfig = {
+  datasetKey: 'performanceStats'
+}
+
+export type MetricPairWidgetConfig = {
+  datasetKey: 'performanceStats'
+}
+
+export type AllocationSpotlightWidgetConfig = {
+  datasetKey: 'assetAllocation'
+}
+
+export type HealthBannerWidgetConfig = {
+  datasetKey: 'performanceStats'
+}
+
 export type LineWidget = BaseWidget & {
   type: 'line'
   config: LineWidgetConfig
+}
+
+export type AreaWidget = BaseWidget & {
+  type: 'area'
+  config: AreaWidgetConfig
 }
 
 export type BarWidget = BaseWidget & {
@@ -83,9 +140,61 @@ export type BarWidget = BaseWidget & {
   config: BarWidgetConfig
 }
 
+export type DonutWidget = BaseWidget & {
+  type: 'donut'
+  config: DonutWidgetConfig
+}
+
 export type StatWidget = BaseWidget & {
   type: 'stat'
   config: StatWidgetConfig
 }
 
-export type Widget = LineWidget | BarWidget | StatWidget
+export type SummaryWidget = BaseWidget & {
+  type: 'summary'
+  config: SummaryWidgetConfig
+}
+
+export type AllocationListWidget = BaseWidget & {
+  type: 'allocationList'
+  config: AllocationListWidgetConfig
+}
+
+export type TimelineWidget = BaseWidget & {
+  type: 'timeline'
+  config: TimelineWidgetConfig
+}
+
+export type InsightWidget = BaseWidget & {
+  type: 'insight'
+  config: InsightWidgetConfig
+}
+
+export type MetricPairWidget = BaseWidget & {
+  type: 'metricPair'
+  config: MetricPairWidgetConfig
+}
+
+export type AllocationSpotlightWidget = BaseWidget & {
+  type: 'allocationSpotlight'
+  config: AllocationSpotlightWidgetConfig
+}
+
+export type HealthBannerWidget = BaseWidget & {
+  type: 'healthBanner'
+  config: HealthBannerWidgetConfig
+}
+
+export type Widget =
+  | LineWidget
+  | AreaWidget
+  | BarWidget
+  | DonutWidget
+  | StatWidget
+  | SummaryWidget
+  | AllocationListWidget
+  | TimelineWidget
+  | InsightWidget
+  | MetricPairWidget
+  | AllocationSpotlightWidget
+  | HealthBannerWidget

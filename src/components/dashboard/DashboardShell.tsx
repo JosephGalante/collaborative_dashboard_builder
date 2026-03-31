@@ -15,8 +15,12 @@ export default function DashboardShell() {
   const lastSavedAt = useDashboardStore((state) => state.lastSavedAt)
   const isSaving = useDashboardStore((state) => state.isSaving)
   const selectedWidgetId = useDashboardStore((state) => state.selectedWidgetId)
+  const canUndo = useDashboardStore((state) => state.historyPast.length > 0)
+  const canRedo = useDashboardStore((state) => state.historyFuture.length > 0)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
+  const undo = useDashboardStore((state) => state.undo)
+  const redo = useDashboardStore((state) => state.redo)
   const [leftCollapsed, setLeftCollapsed] = useState(false)
   const [rightCollapsed, setRightCollapsed] = useState(false)
 
@@ -32,6 +36,21 @@ export default function DashboardShell() {
         }
         return
       }
+      const isModifierPressed = event.metaKey || event.ctrlKey
+      if (isModifierPressed && event.key.toLowerCase() === 'z') {
+        event.preventDefault()
+        if (event.shiftKey) {
+          redo()
+        } else {
+          undo()
+        }
+        return
+      }
+      if (isModifierPressed && event.key.toLowerCase() === 'y') {
+        event.preventDefault()
+        redo()
+        return
+      }
       if ((event.key === 'Delete' || event.key === 'Backspace') && selectedWidgetId) {
         event.preventDefault()
         removeWidget(selectedWidgetId)
@@ -39,7 +58,7 @@ export default function DashboardShell() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [selectedWidgetId, selectWidget, removeWidget])
+  }, [selectedWidgetId, selectWidget, removeWidget, undo, redo])
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
@@ -51,6 +70,38 @@ export default function DashboardShell() {
           <DashboardRename />
         </div>
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 rounded-md border border-zinc-800 bg-zinc-900/60 p-1">
+            <button
+              type="button"
+              onClick={undo}
+              disabled={!canUndo}
+              className={[
+                'inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium transition',
+                canUndo
+                  ? 'cursor-pointer text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100'
+                  : 'cursor-not-allowed text-zinc-600',
+              ].join(' ')}
+              title="Undo (Cmd/Ctrl+Z)"
+            >
+              <span aria-hidden>↶</span>
+              Undo
+            </button>
+            <button
+              type="button"
+              onClick={redo}
+              disabled={!canRedo}
+              className={[
+                'inline-flex items-center gap-1 rounded px-2 py-1.5 text-xs font-medium transition',
+                canRedo
+                  ? 'cursor-pointer text-zinc-300 hover:bg-zinc-800 hover:text-zinc-100'
+                  : 'cursor-not-allowed text-zinc-600',
+              ].join(' ')}
+              title="Redo (Cmd/Ctrl+Shift+Z)"
+            >
+              <span aria-hidden>↷</span>
+              Redo
+            </button>
+          </div>
           <a
             href={githubUrl}
             target="_blank"

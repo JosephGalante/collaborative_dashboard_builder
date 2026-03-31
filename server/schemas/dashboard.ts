@@ -31,7 +31,19 @@ const lineConfigSchema = z.object({
   yField: z.enum(['portfolioValue', 'netFlows']),
 })
 
+const areaConfigSchema = z.object({
+  datasetKey: z.literal('portfolioTimeseries'),
+  xField: z.literal('date'),
+  yField: z.enum(['portfolioValue', 'netFlows']),
+})
+
 const barConfigSchema = z.object({
+  datasetKey: z.literal('assetAllocation'),
+  categoryField: z.literal('assetClass'),
+  valueField: z.literal('marketValue'),
+})
+
+const donutConfigSchema = z.object({
   datasetKey: z.literal('assetAllocation'),
   categoryField: z.literal('assetClass'),
   valueField: z.literal('marketValue'),
@@ -41,6 +53,34 @@ const statConfigSchema = z.object({
   datasetKey: z.literal('performanceStats'),
   statKey: z.enum(['totalValue', 'dailyChange', 'ytdReturnPct']),
   format: z.enum(['currency', 'percent', 'number']),
+})
+
+const summaryConfigSchema = z.object({
+  datasetKey: z.literal('performanceStats'),
+})
+
+const allocationListConfigSchema = z.object({
+  datasetKey: z.literal('assetAllocation'),
+})
+
+const timelineConfigSchema = z.object({
+  datasetKey: z.literal('portfolioTimeseries'),
+})
+
+const insightConfigSchema = z.object({
+  datasetKey: z.literal('performanceStats'),
+})
+
+const metricPairConfigSchema = z.object({
+  datasetKey: z.literal('performanceStats'),
+})
+
+const allocationSpotlightConfigSchema = z.object({
+  datasetKey: z.literal('assetAllocation'),
+})
+
+const healthBannerConfigSchema = z.object({
+  datasetKey: z.literal('performanceStats'),
 })
 
 export const widgetSchema = z.discriminatedUnion('type', [
@@ -53,14 +93,68 @@ export const widgetSchema = z.discriminatedUnion('type', [
   z.object({
     id: z.uuid(),
     title: widgetTitleSchema,
+    type: z.literal('area'),
+    config: areaConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
     type: z.literal('bar'),
     config: barConfigSchema,
   }),
   z.object({
     id: z.uuid(),
     title: widgetTitleSchema,
+    type: z.literal('donut'),
+    config: donutConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
     type: z.literal('stat'),
     config: statConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('summary'),
+    config: summaryConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('allocationList'),
+    config: allocationListConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('timeline'),
+    config: timelineConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('insight'),
+    config: insightConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('metricPair'),
+    config: metricPairConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('allocationSpotlight'),
+    config: allocationSpotlightConfigSchema,
+  }),
+  z.object({
+    id: z.uuid(),
+    title: widgetTitleSchema,
+    type: z.literal('healthBanner'),
+    config: healthBannerConfigSchema,
   }),
 ])
 
