@@ -1,12 +1,7 @@
 import { create } from 'zustand'
 import type { Dashboard } from '@/types/dashboard'
-import type {
-  GlobalFilters,
-  Widget,
-  WidgetId,
-  WidgetLayout,
-  WidgetType,
-} from '@/types/widget'
+import type { GlobalFilters, Widget, WidgetId, WidgetLayout, WidgetType } from '@/types/widget'
+import { createDefaultLayout, createDefaultWidget } from '@/lib/widgets/defaultWidget'
 
 const defaultGlobalFilters: GlobalFilters = {
   dateRange: {
@@ -14,64 +9,6 @@ const defaultGlobalFilters: GlobalFilters = {
     to: null,
   },
   assetClasses: [],
-}
-
-function createDefaultWidget(type: WidgetType): Widget {
-  const id = crypto.randomUUID()
-
-  if (type === 'line') {
-    return {
-      id,
-      type: 'line',
-      title: 'Portfolio Value',
-      config: {
-        datasetKey: 'portfolioTimeseries',
-        xField: 'date',
-        yField: 'portfolioValue',
-      },
-    }
-  }
-
-  if (type === 'bar') {
-    return {
-      id,
-      type: 'bar',
-      title: 'Asset Allocation',
-      config: {
-        datasetKey: 'assetAllocation',
-        categoryField: 'assetClass',
-        valueField: 'marketValue',
-      },
-    }
-  }
-
-  return {
-    id,
-    type: 'stat',
-    title: 'Total Value',
-    config: {
-      datasetKey: 'performanceStats',
-      statKey: 'totalValue',
-      format: 'currency',
-    },
-  }
-}
-
-function createDefaultLayout(itemId: WidgetId, index: number): WidgetLayout {
-  const columns = 12
-  const itemWidth = 4
-  const itemHeight = 4
-  const itemsPerRow = columns / itemWidth
-
-  return {
-    i: itemId,
-    w: itemWidth,
-    h: itemHeight,
-    x: (index % itemsPerRow) * itemWidth,
-    y: Math.floor(index / itemsPerRow) * itemHeight,
-    minW: 3,
-    minH: 3,
-  }
 }
 
 type DashboardStore = {
