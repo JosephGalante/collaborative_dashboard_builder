@@ -30,6 +30,10 @@ export type UpdateDashboardRequest = {
   globalFilters: GlobalFilters
 }
 
+export type UpdateDashboardOptions = {
+  actorUserId?: string | null
+}
+
 export type UpdateDashboardResponse = {
   dashboard: Dashboard
 }
@@ -61,10 +65,14 @@ export async function getDashboard(id: string): Promise<GetDashboardResponse> {
 export async function updateDashboard(
   id: string,
   input: UpdateDashboardRequest,
+  options: UpdateDashboardOptions = {},
 ): Promise<UpdateDashboardResponse> {
   const res = await fetch(apiUrl(`/api/dashboards/${encodeURIComponent(id)}`), {
     method: 'PUT',
-    headers: {'Content-Type': 'application/json'},
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.actorUserId ? {'X-Actor-User-Id': options.actorUserId} : {}),
+    },
     body: JSON.stringify(input),
   })
   if (!res.ok) {

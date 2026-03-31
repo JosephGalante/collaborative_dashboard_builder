@@ -86,3 +86,11 @@ export type ServerToClientEvent =
       type: 'selection:updated'
       payload: UserSelection
     }
+  | {
+      type: 'dashboard:updated'
+      payload: {
+        dashboardId: DashboardId
+        updatedAt: string
+        sourceUserId: UserId | null
+      }
+    }

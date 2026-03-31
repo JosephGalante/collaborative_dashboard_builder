@@ -10,7 +10,26 @@ import {useDashboardStore} from '@/stores/dashboardStore'
 
 const githubUrl = 'https://github.com/JosephGalante/collaborative_dashboard_builder'
 
-export default function DashboardShell() {
+type DashboardShellProps = {
+  remoteUpdatePending?: boolean
+  remoteUpdateUpdatedAt?: string | null
+  onReloadRemoteUpdate?: () => void
+  onDismissRemoteUpdate?: () => void
+}
+
+function formatRemoteUpdateTime(iso: string | null | undefined) {
+  if (!iso) return 'just now'
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return 'just now'
+  return new Intl.DateTimeFormat(undefined, {timeStyle: 'short'}).format(date)
+}
+
+export default function DashboardShell({
+  remoteUpdatePending = false,
+  remoteUpdateUpdatedAt = null,
+  onReloadRemoteUpdate,
+  onDismissRemoteUpdate,
+}: DashboardShellProps) {
   const isDirty = useDashboardStore((state) => state.isDirty)
   const lastSavedAt = useDashboardStore((state) => state.lastSavedAt)
   const isSaving = useDashboardStore((state) => state.isSaving)
@@ -62,6 +81,32 @@ export default function DashboardShell() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
+      {remoteUpdatePending ? (
+        <div className="border-b border-amber-500/20 bg-amber-500/10 px-4 py-3">
+          <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-3">
+            <p className="text-sm text-amber-100">
+              Remote updates are available from {formatRemoteUpdateTime(remoteUpdateUpdatedAt)}.
+              Reload to pull them in without overwriting your unsaved edits.
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={onDismissRemoteUpdate}
+                className="rounded-md border border-amber-500/30 px-3 py-1.5 text-xs text-amber-100 transition hover:border-amber-400/50"
+              >
+                Dismiss
+              </button>
+              <button
+                type="button"
+                onClick={onReloadRemoteUpdate}
+                className="rounded-md bg-amber-400 px-3 py-1.5 text-xs font-medium text-zinc-950 transition hover:bg-amber-300"
+              >
+                Reload
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
       <header className="flex h-14 items-center justify-between gap-4 border-b border-zinc-800 px-4">
         <div className="min-w-0 flex-1">
           <div className="text-[13px] font-semibold tracking-tight text-zinc-100">

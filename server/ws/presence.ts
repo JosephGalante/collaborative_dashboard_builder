@@ -102,6 +102,22 @@ function cleanupEmptyRoom(dashboardId: string) {
   }
 }
 
+export function notifyDashboardUpdated(
+  dashboardId: string,
+  payload: {updatedAt: string; sourceUserId: string | null},
+) {
+  const room = rooms.get(dashboardId)
+  if (!room) return
+  broadcast(room, {
+    type: 'dashboard:updated',
+    payload: {
+      dashboardId,
+      updatedAt: payload.updatedAt,
+      sourceUserId: payload.sourceUserId,
+    },
+  })
+}
+
 function leaveRoom(socket: WsLike) {
   const meta = socketMeta.get(socket)
   if (!meta) return

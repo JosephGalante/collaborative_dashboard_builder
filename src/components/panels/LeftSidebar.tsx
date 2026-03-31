@@ -46,7 +46,7 @@ export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
             className="shrink-0 rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1 text-[11px] font-medium text-zinc-300 transition hover:border-zinc-500 hover:text-zinc-100"
             title={collapsed ? 'Expand widget library' : 'Collapse widget library'}
           >
-            {collapsed ? '»' : '«'}
+            {collapsed ? '>>' : '<<'}
           </button>
         </div>
       </div>

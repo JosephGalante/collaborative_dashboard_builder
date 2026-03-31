@@ -1,4 +1,4 @@
-import {useEffect, useRef} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
 import {useQuery} from '@tanstack/react-query'
 import {z} from 'zod'
@@ -14,7 +14,17 @@ const uuidSchema = z.uuid()
 export default function DashboardPage() {
   const {dashboardId} = useParams()
   const hydrateFromDashboard = useDashboardStore((s) => s.hydrateFromDashboard)
+  const isDirty = useDashboardStore((s) => s.isDirty)
   const hydratedFor = useRef<string | null>(null)
+  const [remoteUpdateState, setRemoteUpdateState] = useState<{
+    dashboardId: string | null
+    pending: boolean
+    updatedAt: string | null
+  }>({
+    dashboardId: null,
+    pending: false,
+    updatedAt: null,
+  })
 
   const validId = Boolean(dashboardId && uuidSchema.safeParse(dashboardId).success)
 
@@ -44,8 +54,40 @@ export default function DashboardPage() {
     hydratedFor.current = dashboardId
   }, [query.data, dashboardId, hydrateFromDashboard])
 
+  const reloadRemoteDashboard = useCallback(async () => {
+    const result = await query.refetch()
+    if (result.data?.dashboard) {
+      hydratedFor.current = null
+      hydrateFromDashboard(result.data.dashboard)
+      hydratedFor.current = dashboardId ?? null
+      setRemoteUpdateState({
+        dashboardId: dashboardId ?? null,
+        pending: false,
+        updatedAt: null,
+      })
+    }
+  }, [query, hydrateFromDashboard, dashboardId])
+
+  const handleRemoteDashboardUpdated = useCallback(
+    ({dashboardId: updatedDashboardId, updatedAt}: {dashboardId: string; updatedAt: string}) => {
+      if (updatedDashboardId !== dashboardId) {
+        return
+      }
+      if (isDirty) {
+        setRemoteUpdateState({
+          dashboardId: updatedDashboardId,
+          pending: true,
+          updatedAt,
+        })
+        return
+      }
+      void reloadRemoteDashboard()
+    },
+    [dashboardId, isDirty, reloadRemoteDashboard],
+  )
+
   useDashboardAutosave(dashboardId)
-  useDashboardSocket(dashboardId)
+  useDashboardSocket(dashboardId, {onRemoteDashboardUpdated: handleRemoteDashboardUpdated})
 
   if (!dashboardId) {
     return (
@@ -89,5 +131,21 @@ export default function DashboardPage() {
     )
   }
 
-  return <DashboardShell />
+  return (
+    <DashboardShell
+      remoteUpdatePending={
+        remoteUpdateState.pending && remoteUpdateState.dashboardId === dashboardId
+      }
+      remoteUpdateUpdatedAt={
+        remoteUpdateState.dashboardId === dashboardId ? remoteUpdateState.updatedAt : null
+      }
+      onReloadRemoteUpdate={() => void reloadRemoteDashboard()}
+      onDismissRemoteUpdate={() =>
+        setRemoteUpdateState((current) => ({
+          ...current,
+          pending: false,
+        }))
+      }
+    />
+  )
 }

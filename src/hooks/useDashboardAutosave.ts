@@ -3,6 +3,7 @@ import {z} from 'zod'
 import {useShallow} from 'zustand/react/shallow'
 import {updateDashboard} from '@/api/dashboards'
 import {getDashboardDraft, useDashboardStore} from '@/stores/dashboardStore'
+import {usePresenceStore} from '@/stores/presenceStore'
 
 /**
  * Debounced autosave when the store is dirty. Requires a hydrated dashboard id.
@@ -12,6 +13,7 @@ export function useDashboardAutosave(dashboardId: string | undefined) {
   const isDirty = useDashboardStore((s) => s.isDirty)
   const setSaving = useDashboardStore((s) => s.setSaving)
   const markSaved = useDashboardStore((s) => s.markSaved)
+  const currentUser = usePresenceStore((s) => s.currentUser)
   const snapshot = useDashboardStore(
     useShallow((s) => ({
       name: s.name,
@@ -39,12 +41,16 @@ export function useDashboardAutosave(dashboardId: string | undefined) {
       }
       setSaving(true)
       try {
-        const res = await updateDashboard(draft.id, {
-          name: draft.name,
-          widgets: draft.widgets,
-          layouts: draft.layouts,
-          globalFilters: draft.globalFilters,
-        })
+        const res = await updateDashboard(
+          draft.id,
+          {
+            name: draft.name,
+            widgets: draft.widgets,
+            layouts: draft.layouts,
+            globalFilters: draft.globalFilters,
+          },
+          {actorUserId: currentUser?.userId},
+        )
         markSaved(res.dashboard.updatedAt)
       } catch {
         setSaving(false)
@@ -52,5 +58,5 @@ export function useDashboardAutosave(dashboardId: string | undefined) {
     }, 850)
 
     return () => window.clearTimeout(handle)
-  }, [dashboardId, isHydrated, isDirty, snapshot, setSaving, markSaved])
+  }, [dashboardId, isHydrated, isDirty, snapshot, setSaving, markSaved, currentUser])
 }

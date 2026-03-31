@@ -2,6 +2,7 @@ import type {FastifyPluginAsync} from 'fastify'
 import {z} from 'zod'
 import {pool, type DashboardRow} from '../db.js'
 import {createDashboardRequestSchema, updateDashboardRequestSchema} from '../schemas/dashboard.js'
+import {notifyDashboardUpdated} from '../ws/presence.js'
 
 const idParamSchema = z.object({
   id: z.uuid(),
@@ -200,6 +201,11 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
     }
 
     const {name, widgets, layouts, globalFilters} = parsed.data
+    const sourceUserIdHeader = request.headers['x-actor-user-id']
+    const sourceUserId =
+      typeof sourceUserIdHeader === 'string' && sourceUserIdHeader.trim()
+        ? sourceUserIdHeader
+        : null
 
     const result = await pool.query<DashboardRow>(
       `UPDATE dashboards
@@ -223,6 +229,11 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
     if (!row) {
       return reply.status(404).send({error: 'Dashboard not found'})
     }
+
+    notifyDashboardUpdated(params.data.id, {
+      updatedAt: row.updated_at.toISOString(),
+      sourceUserId,
+    })
 
     return {dashboard: rowToDashboard(row)}
   })

@@ -61,7 +61,14 @@ function isUuid(v: string): boolean {
   return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(v)
 }
 
-export function useDashboardSocket(dashboardId: string | undefined) {
+type UseDashboardSocketOptions = {
+  onRemoteDashboardUpdated?: (payload: {dashboardId: string; updatedAt: string}) => void
+}
+
+export function useDashboardSocket(
+  dashboardId: string | undefined,
+  options: UseDashboardSocketOptions = {},
+) {
   const selectedWidgetId = useDashboardStore((s) => s.selectedWidgetId)
 
   const setConnectionStatus = usePresenceStore((s) => s.setConnectionStatus)
@@ -74,9 +81,20 @@ export function useDashboardSocket(dashboardId: string | undefined) {
   const updateSelection = usePresenceStore((s) => s.updateSelection)
   const resetPresence = usePresenceStore((s) => s.resetPresence)
   const currentUser = usePresenceStore((s) => s.currentUser)
+  const onRemoteDashboardUpdated = options.onRemoteDashboardUpdated
 
   const socketRef = useRef<WebSocket | null>(null)
+  const currentUserIdRef = useRef<string | null>(null)
+  const onRemoteDashboardUpdatedRef = useRef(onRemoteDashboardUpdated)
   const valid = useMemo(() => Boolean(dashboardId && isUuid(dashboardId)), [dashboardId])
+
+  useEffect(() => {
+    currentUserIdRef.current = currentUser?.userId ?? null
+  }, [currentUser?.userId])
+
+  useEffect(() => {
+    onRemoteDashboardUpdatedRef.current = onRemoteDashboardUpdated
+  }, [onRemoteDashboardUpdated])
 
   useEffect(() => {
     if (!valid || !dashboardId) {
@@ -149,6 +167,19 @@ export function useDashboardSocket(dashboardId: string | undefined) {
         }
         if (event.type === 'selection:updated') {
           updateSelection(event.payload)
+          return
+        }
+        if (event.type === 'dashboard:updated') {
+          if (
+            event.payload.sourceUserId &&
+            event.payload.sourceUserId === currentUserIdRef.current
+          ) {
+            return
+          }
+          onRemoteDashboardUpdatedRef.current?.({
+            dashboardId: event.payload.dashboardId,
+            updatedAt: event.payload.updatedAt,
+          })
         }
       } catch {
         // ignore malformed events
