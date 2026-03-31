@@ -1,49 +1,53 @@
 # Collaborative Dashboard Builder
 
-Built a collaborative dashboard builder with drag-and-drop layout editing, chart/stat widgets, global filtering, autosaved persistence, and best-effort multiplayer presence (online users, remote cursors, selected-widget signals).
+A collaborative dashboard builder that combines a drag-and-drop analytics canvas, autosaved persistence, and lightweight realtime collaboration into a product-shaped full-stack demo.
 
-## Scope and Philosophy
+## Live Demo
 
-This project intentionally stays frontend-led and scoped to finish:
+- Live app: [collaborative-dashboard-builder.vercel.app](https://collaborative-dashboard-builder.vercel.app/)
 
-- no auth or teams
-- no multi-tenant model
-- no query builder
-- no CRDT / operational transform merge logic
-- collaboration is best-effort presence + last-write-wins persistence
+## Executive Summary
 
-The backend stores dashboard JSON (`widgets`, `layouts`, `globalFilters`) for iteration speed.
+This project was built to demonstrate more than chart rendering. The goal was to show product-minded engineering across interaction design, backend persistence, and realtime behavior:
 
-## Features
+- A polished dashboard canvas with drag, resize, duplicate, selection, rename, and keyboard shortcuts
+- Backend persistence with shareable URLs and debounced autosave
+- Best-effort multiplayer collaboration with presence, remote cursors, and selected-widget signals
+- A deliberately scoped collaboration model that feels live without overengineering into CRDT complexity
+
+The result is a portfolio project that feels like an actual internal analytics product instead of a static chart gallery.
+
+## Core Features
 
 - Drag/resize dashboard grid with `react-grid-layout`
-- Multiple widget types across charts, KPI cards, ranked lists, insight panels, banners, and timeline-style feeds
-- Widget configuration panel (title/type/per-widget config)
-- Global filters (date range + asset classes)
-- Debounced autosave + save status messaging
-- Shareable URL routing (`/dashboards/:dashboardId`)
+- Broad widget catalog across charts, KPI cards, ranked lists, insight panels, banners, and timeline-style feeds
+- Widget configuration panel for title, type, and per-widget settings
+- Global filters for date range and asset classes
+- Debounced autosave with save-status feedback
+- Shareable dashboard URLs via `/dashboards/:dashboardId`
 - Realtime presence over WebSocket:
   - connected users indicator
   - live remote cursors
-  - selected-widget presence UI and "is editing this" copy
+  - selected-widget signals and editing cues
+- Undo/redo support for local dashboard edits
 
-## Tech Stack
+## Technical Stack
 
 - Frontend: React, TypeScript, Vite, Tailwind v4
-- State: Zustand (UI/presence), TanStack Query (server fetch/mutation)
-- Charts: Recharts
-- Layout: react-grid-layout
-- Backend: Fastify + Zod + Postgres
+- State: Zustand and TanStack Query
+- Layout and charts: `react-grid-layout`, Recharts
+- Backend: Fastify, Zod, PostgreSQL
 - Realtime: `@fastify/websocket`
+- Deployment target: Vercel + Render + Neon
 
 ## Architecture
 
-State is split by responsibility to keep interaction-heavy UI responsive:
+The state model is intentionally split by responsibility so the UI stays responsive while persistence and collaboration remain understandable:
 
-- **Ephemeral UI state**: Zustand (`dashboardStore`)
-- **Persisted server state**: Fastify + Postgres + TanStack Query
-- **Derived state**: memoized filtering/transforms from seeded data
-- **Presence room state**: dedicated Zustand store + websocket room
+- **Ephemeral UI state**: Zustand for selected widget, panel state, and interaction flow
+- **Persisted document state**: Fastify + Postgres for dashboard documents and shareable URLs
+- **Derived state**: memoized transforms over seeded data and global filters
+- **Presence state**: dedicated websocket room + Zustand store for users, cursors, and selected-widget signals
 
 ```mermaid
 flowchart LR
@@ -64,28 +68,36 @@ flowchart LR
   WS --> PS
 ```
 
-## One-Command Local Setup
+## Product And Systems Tradeoffs
+
+This project intentionally optimizes for finish, clarity, and explainability:
+
+- **Document persistence over a normalized schema**: whole-dashboard JSON is faster to iterate on and simpler to reason about for an MVP
+- **Best-effort collaboration over strict merge correctness**: presence and editing signals add clear value without requiring CRDT/OT complexity
+- **Last-write-wins persistence**: acceptable for a portfolio collaboration demo, but not positioned as fully conflict-safe realtime editing
+- **Curated widget catalog over open-ended builder logic**: helps the app feel broader while keeping the UX coherent
+
+These are deliberate choices I would call out in an interview, because they show scoping discipline rather than incomplete thinking.
+
+## Local Setup
 
 Requirements:
 
 - Node 20+
-- Docker Desktop (for Postgres)
+- Docker Desktop for local Postgres
 
 ```bash
-npm install && docker compose up -d && npm run dev:full
+npm install
+cp .env.example .env
+docker compose up -d
+npm run dev:full
 ```
 
-Open `http://localhost:5173`.
+Then open `http://localhost:5173`.
 
 ## Environment
 
-Copy `.env.example` to `.env` (or use defaults):
-
-```bash
-cp .env.example .env
-```
-
-Default API server env:
+Backend defaults:
 
 - `DATABASE_URL=postgres://postgres:postgres@localhost:5433/dashboards`
 - `PORT=3333`
@@ -109,65 +121,40 @@ Frontend deploy env:
 - `npm run build` - production frontend + backend build
 - `npm run start:api` - run compiled backend
 
-## Seed a Demo Dashboard
+## Demo Data
 
-With API running (`npm run dev:api` or `npm run dev:full`):
+With the API running:
 
 ```bash
 npm run seed:demo
 ```
 
-It prints the created dashboard URL.
+This prints a dashboard URL you can share directly.
 
-## Deployment Notes
+## Deployment
 
-Frontend:
+Recommended low-cost stack:
 
-- Deploy Vite static build (`dist`) to Vercel, Netlify, or Cloudflare Pages
-- Set `VITE_API_BASE_URL=https://<api-domain>`
-- Set `VITE_WS_BASE_URL=wss://<api-domain>` if websocket traffic is on a different origin than the page
+- Frontend: Vercel
+- Backend + WebSockets: Render
+- Database: Neon
 
-Backend:
+Useful production endpoints:
 
-- Deploy the Fastify API separately to Render, Railway, Fly.io, or a container host
-- Build command: `npm run build:server`
-- Start command: `npm run start:api`
-- Health endpoint: `GET /healthz`
-- Readiness endpoint: `GET /readyz`
-- Required env: `DATABASE_URL`
-- Recommended env: `PORT`, `HOST`, `CORS_ORIGIN`
-
-Container option:
-
-- `Dockerfile.api` builds a production backend image
-- Example:
-
-```bash
-docker build -f Dockerfile.api -t collaborative-dashboard-api .
-docker run --env-file .env -p 3333:3333 collaborative-dashboard-api
-```
-
-Suggested rollout order:
-
-1. Provision Postgres and set `DATABASE_URL`
-2. Deploy backend and confirm `/healthz` and `/readyz`
-3. Deploy frontend with `VITE_API_BASE_URL` and `VITE_WS_BASE_URL`
-4. Run `npm run seed:demo` against the live API if you want a polished shareable demo link
+- `GET /healthz`
+- `GET /readyz`
 
 Provider-specific guide:
 
-- For the recommended zero-cost stack, see `docs/deploy-vercel-render-neon.md`
-- Included config files:
-  - `vercel.json`
-  - `render.yaml`
-  - `Dockerfile.api`
+- `docs/deploy-vercel-render-neon.md`
 
-## Tradeoffs
+Included deployment files:
 
-- **JSON persistence over normalized schema**: faster iteration, simpler API surface.
-- **Best-effort realtime over strict collaboration correctness**: enough for portfolio demonstration without backend-heavy complexity.
-- **Curated widget catalog over open-ended widget building**: keeps UX focused and finishable while still showing product breadth.
+- `vercel.json`
+- `render.yaml`
+- `Dockerfile.api`
 
-## Portfolio Write-up
+## Additional Project Notes
 
-Use `docs/portfolio-writeup.md` as the short recruiter-facing narrative and talking points.
+- Recruiter-facing narrative: `docs/portfolio-writeup.md`
+- Deployment walkthrough: `docs/deploy-vercel-render-neon.md`
