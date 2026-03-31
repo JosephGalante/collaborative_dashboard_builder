@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useDashboardStore } from '@/stores/dashboardStore'
 
 const widgetButtons = [
@@ -11,9 +12,18 @@ export default function LeftSidebar() {
 
   return (
     <aside className="border-r border-zinc-800 bg-zinc-900/50 p-4">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
-        Widget Library
-      </h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-zinc-400">
+          Widget Library
+        </h2>
+        <Link
+          to="/dashboards/new"
+          className="shrink-0 rounded border border-zinc-700 px-2 py-1 text-xs text-zinc-300 hover:border-zinc-500"
+          title="Create a new dashboard"
+        >
+          New
+        </Link>
+      </div>
       <div className="mt-4 space-y-2">
         {widgetButtons.map((button) => (
           <button

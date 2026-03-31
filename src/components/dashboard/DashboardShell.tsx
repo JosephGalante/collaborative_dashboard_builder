@@ -5,6 +5,15 @@ import LeftSidebar from '@/components/panels/LeftSidebar'
 import RightConfigPanel from '@/components/panels/RightConfigPanel'
 import { useDashboardStore } from '@/stores/dashboardStore'
 
+function DashboardTitleLine() {
+  const name = useDashboardStore((state) => state.name)
+  const isHydrated = useDashboardStore((state) => state.isHydrated)
+  if (!isHydrated) {
+    return null
+  }
+  return <div className="truncate text-xs text-zinc-500">{name}</div>
+}
+
 export default function DashboardShell() {
   const isDirty = useDashboardStore((state) => state.isDirty)
   const lastSavedAt = useDashboardStore((state) => state.lastSavedAt)
@@ -28,7 +37,10 @@ export default function DashboardShell() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100">
       <header className="flex h-14 items-center justify-between border-b border-zinc-800 px-4">
-        <div className="font-medium">Collaborative Dashboard Builder</div>
+        <div className="min-w-0">
+          <div className="truncate font-medium">Collaborative Dashboard Builder</div>
+          <DashboardTitleLine />
+        </div>
         <DashboardSaveStatus isDirty={isDirty} lastSavedAt={lastSavedAt} isSaving={isSaving} />
       </header>
 
