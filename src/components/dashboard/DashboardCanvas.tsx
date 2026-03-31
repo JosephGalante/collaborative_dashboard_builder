@@ -101,7 +101,8 @@ export default function DashboardCanvas() {
           cols={12}
           rowHeight={32}
           margin={[12, 12]}
-          isBounded
+          compactType={null}
+          resizeHandles={['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw']}
           draggableHandle=".drag-handle"
           draggableCancel=".widget-action"
           layout={layouts}

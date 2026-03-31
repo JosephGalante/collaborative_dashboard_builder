@@ -45,18 +45,15 @@ export default function WidgetCard({
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/50',
       ].join(' ')}
     >
-      <button
-        type="button"
-        onMouseDown={(event) => {
-          event.stopPropagation()
+      <div
+        onMouseDown={() => {
           onSelect(widget.id)
         }}
-        onTouchStart={(event) => {
-          event.stopPropagation()
+        onTouchStart={() => {
           onSelect(widget.id)
         }}
-        className="drag-handle widget-action absolute left-2 top-2 inline-flex cursor-grab items-center justify-center rounded border border-zinc-700/90 bg-zinc-950/80 px-1.5 py-1 text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-300 active:cursor-grabbing"
-        aria-label="Drag widget"
+        className="drag-handle absolute left-2 top-2 inline-flex cursor-grab items-center justify-center rounded border border-zinc-700/90 bg-zinc-950/80 px-1.5 py-1 text-zinc-500 transition hover:border-zinc-600 hover:text-zinc-300 active:cursor-grabbing"
+        role="presentation"
         title="Drag widget"
       >
         <span className="grid grid-cols-2 gap-[2px]" aria-hidden>
@@ -67,7 +64,7 @@ export default function WidgetCard({
           <span className="size-1 rounded-full bg-current" />
           <span className="size-1 rounded-full bg-current" />
         </span>
-      </button>
+      </div>
 
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 pl-8">

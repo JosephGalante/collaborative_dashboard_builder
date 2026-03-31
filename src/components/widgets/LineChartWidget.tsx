@@ -44,7 +44,13 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
 
   return (
     <div className="h-full min-h-[120px] w-full min-w-0">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        minWidth={0}
+        minHeight={120}
+        initialDimension={{ width: 320, height: 180 }}
+      >
         <LineChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} />
           <XAxis

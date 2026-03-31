@@ -8,6 +8,8 @@ import RightConfigPanel from '@/components/panels/RightConfigPanel'
 import { isEditableTarget } from '@/lib/dom/isEditableTarget'
 import { useDashboardStore } from '@/stores/dashboardStore'
 
+const githubUrl = 'https://github.com/JosephGalante/collaborative_dashboard_builder'
+
 export default function DashboardShell() {
   const isDirty = useDashboardStore((state) => state.isDirty)
   const lastSavedAt = useDashboardStore((state) => state.lastSavedAt)
@@ -49,6 +51,14 @@ export default function DashboardShell() {
           <DashboardRename />
         </div>
         <div className="flex items-center gap-2">
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-xs font-medium text-zinc-300 transition hover:border-zinc-600 hover:text-zinc-100"
+          >
+            GitHub
+          </a>
           <PresenceStatus />
           <DashboardSaveStatus isDirty={isDirty} lastSavedAt={lastSavedAt} isSaving={isSaving} />
         </div>

@@ -59,7 +59,7 @@ export function reassignWidgetType(widget: Widget, newType: WidgetType): Widget 
 export function createDefaultLayout(itemId: WidgetId, index: number): WidgetLayout {
   const columns = 12
   const itemWidth = 4
-  const itemHeight = 4
+  const itemHeight = 7
   const itemsPerRow = columns / itemWidth
 
   return {
@@ -69,6 +69,6 @@ export function createDefaultLayout(itemId: WidgetId, index: number): WidgetLayo
     x: (index % itemsPerRow) * itemWidth,
     y: Math.floor(index / itemsPerRow) * itemHeight,
     minW: 3,
-    minH: 3,
+    minH: 5,
   }
 }
