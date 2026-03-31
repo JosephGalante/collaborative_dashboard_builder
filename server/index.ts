@@ -8,7 +8,7 @@ async function main() {
 
   const app = Fastify({ logger: true })
   await app.register(cors, { origin: true })
-  await app.register(registerDashboardRoutes)
+  await app.register(registerDashboardRoutes, { prefix: '/api' })
 
   const port = Number(process.env.PORT) || 3333
   await app.listen({ port, host: '0.0.0.0' })
