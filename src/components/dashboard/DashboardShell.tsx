@@ -1,6 +1,6 @@
 import DashboardCanvas from './DashboardCanvas'
-import LeftSidebar from '../panels/LeftSidebar'
-import RightConfigPanel from '../panels/RightConfigPanel'
+import LeftSidebar from '@/components/panels/LeftSidebar'
+import RightConfigPanel from '@/components/panels/RightConfigPanel'
 
 export default function DashboardShell() {
   return (

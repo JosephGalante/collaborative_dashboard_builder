@@ -1,4 +1,4 @@
-import type { WidgetType } from '../../types/widget'
+import type { WidgetType } from '@/types/widget'
 
 export const widgetRegistry: Record<WidgetType, { displayName: string }> = {
   line: { displayName: 'Line Chart' },

@@ -1,4 +1,4 @@
-import type { SeedDataset } from '../types/widget'
+import type { SeedDataset } from '@/types/widget'
 
 export const seedDataset: SeedDataset = {
   portfolioTimeseries: [

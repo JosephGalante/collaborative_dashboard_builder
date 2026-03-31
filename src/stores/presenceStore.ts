@@ -4,8 +4,8 @@ import type {
   PresenceUser,
   RemoteCursor,
   UserSelection,
-} from '../types/presence'
-import type { UserId, WidgetId } from '../types/widget'
+} from '@/types/presence'
+import type { UserId, WidgetId } from '@/types/widget'
 
 type PresenceStore = {
   connectionStatus: 'disconnected' | 'connecting' | 'connected'
