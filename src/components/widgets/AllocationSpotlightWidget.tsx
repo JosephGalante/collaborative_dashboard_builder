@@ -8,9 +8,7 @@ type AllocationSpotlightWidgetProps = {
   dataset: SeedDataset
 }
 
-export default function AllocationSpotlightWidget({
-  dataset,
-}: AllocationSpotlightWidgetProps) {
+export default function AllocationSpotlightWidget({dataset}: AllocationSpotlightWidgetProps) {
   const top = useMemo(
     () => [...dataset.assetAllocation].sort((a, b) => b.marketValue - a.marketValue)[0],
     [dataset.assetAllocation],

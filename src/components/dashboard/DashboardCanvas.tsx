@@ -20,9 +20,7 @@ type LayoutItem = {
   minH?: number
 }
 
-function normalizeLayouts(
-  nextLayouts: ReadonlyArray<LayoutItem>,
-) {
+function normalizeLayouts(nextLayouts: ReadonlyArray<LayoutItem>) {
   return nextLayouts.map((layout) => ({
     i: layout.i,
     x: layout.x,

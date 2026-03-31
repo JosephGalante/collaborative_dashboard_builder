@@ -1,13 +1,5 @@
 import {useEffect, useMemo, useState} from 'react'
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
+import {Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
 import type {AreaWidget, SeedDataset} from '@/types/widget'
 import WidgetChartSkeleton from './WidgetChartSkeleton'
 import WidgetEmptyState from './WidgetEmptyState'

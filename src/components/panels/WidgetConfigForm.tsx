@@ -72,18 +72,54 @@ export default function WidgetConfigForm({widget, updateWidget}: WidgetConfigFor
         </p>
       </div>
 
-      {widget.type === 'line' ? <TimeSeriesConfigFields widget={widget} updateWidget={updateWidget} label="Line chart" /> : null}
-      {widget.type === 'area' ? <TimeSeriesConfigFields widget={widget} updateWidget={updateWidget} label="Area chart" /> : null}
+      {widget.type === 'line' ? (
+        <TimeSeriesConfigFields widget={widget} updateWidget={updateWidget} label="Line chart" />
+      ) : null}
+      {widget.type === 'area' ? (
+        <TimeSeriesConfigFields widget={widget} updateWidget={updateWidget} label="Area chart" />
+      ) : null}
       {widget.type === 'bar' ? <BarConfigFields label="Bar chart" /> : null}
       {widget.type === 'donut' ? <BarConfigFields label="Donut chart" /> : null}
-      {widget.type === 'stat' ? <StatConfigFields widget={widget} updateWidget={updateWidget} /> : null}
+      {widget.type === 'stat' ? (
+        <StatConfigFields widget={widget} updateWidget={updateWidget} />
+      ) : null}
       {widget.type === 'summary' ? <SummaryConfigFields /> : null}
-      {widget.type === 'allocationList' ? <InfoConfigFields label="Allocation list" description="Shows ranked asset-class weights with inline progress bars." /> : null}
-      {widget.type === 'timeline' ? <InfoConfigFields label="Timeline feed" description="Shows the most recent portfolio snapshots and net flow activity." /> : null}
-      {widget.type === 'insight' ? <InfoConfigFields label="Insight card" description="Summarizes top allocation, daily move, and YTD posture into quick takeaways." /> : null}
-      {widget.type === 'metricPair' ? <InfoConfigFields label="Metric pair" description="Displays two headline performance metrics side by side." /> : null}
-      {widget.type === 'allocationSpotlight' ? <InfoConfigFields label="Allocation spotlight" description="Highlights the current largest portfolio allocation with emphasis styling." /> : null}
-      {widget.type === 'healthBanner' ? <InfoConfigFields label="Health banner" description="Condenses recent daily and YTD performance into a status banner." /> : null}
+      {widget.type === 'allocationList' ? (
+        <InfoConfigFields
+          label="Allocation list"
+          description="Shows ranked asset-class weights with inline progress bars."
+        />
+      ) : null}
+      {widget.type === 'timeline' ? (
+        <InfoConfigFields
+          label="Timeline feed"
+          description="Shows the most recent portfolio snapshots and net flow activity."
+        />
+      ) : null}
+      {widget.type === 'insight' ? (
+        <InfoConfigFields
+          label="Insight card"
+          description="Summarizes top allocation, daily move, and YTD posture into quick takeaways."
+        />
+      ) : null}
+      {widget.type === 'metricPair' ? (
+        <InfoConfigFields
+          label="Metric pair"
+          description="Displays two headline performance metrics side by side."
+        />
+      ) : null}
+      {widget.type === 'allocationSpotlight' ? (
+        <InfoConfigFields
+          label="Allocation spotlight"
+          description="Highlights the current largest portfolio allocation with emphasis styling."
+        />
+      ) : null}
+      {widget.type === 'healthBanner' ? (
+        <InfoConfigFields
+          label="Health banner"
+          description="Condenses recent daily and YTD performance into a status banner."
+        />
+      ) : null}
     </div>
   )
 }

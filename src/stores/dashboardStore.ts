@@ -31,10 +31,12 @@ function cloneDocumentState(state: DashboardDocumentState): DashboardDocumentSta
   }
 }
 
-function getDocumentState(state: Pick<
-  DashboardStore,
-  'name' | 'widgets' | 'layouts' | 'globalFilters' | 'selectedWidgetId'
->): DashboardDocumentState {
+function getDocumentState(
+  state: Pick<
+    DashboardStore,
+    'name' | 'widgets' | 'layouts' | 'globalFilters' | 'selectedWidgetId'
+  >,
+): DashboardDocumentState {
   return cloneDocumentState({
     name: state.name,
     widgets: state.widgets,

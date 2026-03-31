@@ -10,7 +10,9 @@ type InsightWidgetProps = {
 
 export default function InsightWidget({dataset}: InsightWidgetProps) {
   const insights = useMemo(() => {
-    const topAllocation = [...dataset.assetAllocation].sort((a, b) => b.marketValue - a.marketValue)[0]
+    const topAllocation = [...dataset.assetAllocation].sort(
+      (a, b) => b.marketValue - a.marketValue,
+    )[0]
     if (!topAllocation) {
       return []
     }
@@ -31,7 +33,10 @@ export default function InsightWidget({dataset}: InsightWidgetProps) {
       },
       {
         label: 'YTD posture',
-        value: ytd >= 0 ? `Ahead ${formatStatValue(ytd, 'percent')}` : `Behind ${formatStatValue(ytd, 'percent')}`,
+        value:
+          ytd >= 0
+            ? `Ahead ${formatStatValue(ytd, 'percent')}`
+            : `Behind ${formatStatValue(ytd, 'percent')}`,
         tone: ytd >= 0 ? 'text-cyan-300' : 'text-amber-300',
       },
     ]
@@ -44,7 +49,10 @@ export default function InsightWidget({dataset}: InsightWidgetProps) {
   return (
     <div className="space-y-3">
       {insights.map((insight) => (
-        <div key={insight.label} className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-3">
+        <div
+          key={insight.label}
+          className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-3"
+        >
           <p className="text-[11px] uppercase tracking-wide text-zinc-500">{insight.label}</p>
           <p className={`mt-1 text-sm font-medium ${insight.tone}`}>{insight.value}</p>
         </div>

@@ -43,7 +43,14 @@ export default function DonutChartWidget({widget, dataset}: DonutChartWidgetProp
           initialDimension={{width: 280, height: 180}}
         >
           <PieChart>
-            <Pie data={rows} dataKey="value" nameKey="name" innerRadius="52%" outerRadius="78%" paddingAngle={2}>
+            <Pie
+              data={rows}
+              dataKey="value"
+              nameKey="name"
+              innerRadius="52%"
+              outerRadius="78%"
+              paddingAngle={2}
+            >
               {rows.map((row, index) => (
                 <Cell key={row.name} fill={donutColors[index % donutColors.length]} />
               ))}

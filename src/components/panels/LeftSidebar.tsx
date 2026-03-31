@@ -26,7 +26,9 @@ export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
 
   return (
     <aside className="flex min-h-0 flex-col border-r border-zinc-800 bg-zinc-900/50">
-      <div className={['border-b border-zinc-800', collapsed ? 'px-2 py-2' : 'px-4 py-3'].join(' ')}>
+      <div
+        className={['border-b border-zinc-800', collapsed ? 'px-2 py-2' : 'px-4 py-3'].join(' ')}
+      >
         <div className="flex items-start justify-between gap-2">
           <div>
             {!collapsed ? (
@@ -34,7 +36,9 @@ export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
                 Widget library
               </h2>
             ) : null}
-            {!collapsed ? <p className="mt-1 text-xs text-zinc-500">Add tiles to the canvas.</p> : null}
+            {!collapsed ? (
+              <p className="mt-1 text-xs text-zinc-500">Add tiles to the canvas.</p>
+            ) : null}
           </div>
           <button
             type="button"
@@ -46,7 +50,11 @@ export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
           </button>
         </div>
       </div>
-      <div className={['flex-1 space-y-2 overflow-y-auto', collapsed ? 'px-2 py-2' : 'px-4 py-3'].join(' ')}>
+      <div
+        className={['flex-1 space-y-2 overflow-y-auto', collapsed ? 'px-2 py-2' : 'px-4 py-3'].join(
+          ' ',
+        )}
+      >
         <Link
           to="/dashboards/new"
           className={[
@@ -71,7 +79,9 @@ export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
             <span className="block text-sm font-medium text-zinc-100">
               {collapsed ? button.label[0] : button.label}
             </span>
-            {!collapsed ? <span className="mt-0.5 block text-xs text-zinc-500">{button.desc}</span> : null}
+            {!collapsed ? (
+              <span className="mt-0.5 block text-xs text-zinc-500">{button.desc}</span>
+            ) : null}
           </button>
         ))}
       </div>

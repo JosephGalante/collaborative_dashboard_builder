@@ -8,9 +8,7 @@ type AllocationListWidgetProps = {
   dataset: SeedDataset
 }
 
-export default function AllocationListWidget({
-  dataset,
-}: AllocationListWidgetProps) {
+export default function AllocationListWidget({dataset}: AllocationListWidgetProps) {
   const rows = useMemo(() => {
     const total = dataset.assetAllocation.reduce((sum, row) => sum + row.marketValue, 0)
     return dataset.assetAllocation

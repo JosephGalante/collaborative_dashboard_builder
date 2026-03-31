@@ -159,7 +159,11 @@ export function reassignWidgetType(widget: Widget, newType: WidgetType): Widget 
   }
 }
 
-export function createDefaultLayout(itemId: WidgetId, index: number, type?: WidgetType): WidgetLayout {
+export function createDefaultLayout(
+  itemId: WidgetId,
+  index: number,
+  type?: WidgetType,
+): WidgetLayout {
   const columns = 12
   const itemWidth = 4
   const itemHeight = type === 'timeline' ? 10 : 7
