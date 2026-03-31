@@ -3,7 +3,7 @@ import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
 import { useDashboardStore } from '@/stores/dashboardStore'
-import { seedDataset } from '@/data/seedData'
+import { useDerivedSeedDataset } from '@/hooks/useDerivedSeedDataset'
 
 const AutoWidthGridLayout = WidthProvider(GridLayout)
 
@@ -32,10 +32,12 @@ function normalizeLayouts(
 export default function DashboardCanvas() {
   const widgets = useDashboardStore((state) => state.widgets)
   const layouts = useDashboardStore((state) => state.layouts)
+  const globalFilters = useDashboardStore((state) => state.globalFilters)
   const selectedWidgetId = useDashboardStore((state) => state.selectedWidgetId)
   const setLayouts = useDashboardStore((state) => state.setLayouts)
   const selectWidget = useDashboardStore((state) => state.selectWidget)
   const removeWidget = useDashboardStore((state) => state.removeWidget)
+  const dataset = useDerivedSeedDataset(globalFilters)
 
   if (widgets.length === 0) {
     return (
@@ -79,7 +81,7 @@ export default function DashboardCanvas() {
               <div className="h-[calc(100%-34px)]">
                 <WidgetCard
                   widget={widget}
-                  dataset={seedDataset}
+                  dataset={dataset}
                   isSelected={selectedWidgetId === widget.id}
                   onSelect={selectWidget}
                   onRemove={removeWidget}

@@ -21,6 +21,9 @@ type DashboardStore = {
   isHydrated: boolean
   isDirty: boolean
   lastSavedAt: string | null
+  /** Milestone 6: set true while autosave mutation is in flight */
+  isSaving: boolean
+  setSaving: (saving: boolean) => void
   hydrateFromDashboard: (dashboard: Dashboard) => void
   setDashboardName: (name: string) => void
   addWidget: (widgetType: WidgetType) => void
@@ -46,6 +49,9 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   isHydrated: false,
   isDirty: false,
   lastSavedAt: null,
+  isSaving: false,
+
+  setSaving: (saving) => set({ isSaving: saving }),
 
   hydrateFromDashboard: (dashboard) =>
     set({
@@ -57,6 +63,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       selectedWidgetId: null,
       isHydrated: true,
       isDirty: false,
+      isSaving: false,
       lastSavedAt: dashboard.updatedAt,
     }),
 
@@ -128,13 +135,21 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       globalFilters: {
         ...state.globalFilters,
         ...filters,
+        dateRange:
+          filters.dateRange !== undefined
+            ? { ...state.globalFilters.dateRange, ...filters.dateRange }
+            : state.globalFilters.dateRange,
+        assetClasses:
+          filters.assetClasses !== undefined
+            ? filters.assetClasses
+            : state.globalFilters.assetClasses,
       },
       isDirty: true,
     })),
 
   selectWidget: (widgetId) => set({ selectedWidgetId: widgetId }),
 
-  markSaved: (savedAt) => set({ lastSavedAt: savedAt, isDirty: false }),
+  markSaved: (savedAt) => set({ lastSavedAt: savedAt, isDirty: false, isSaving: false }),
 
   markDirty: () => set({ isDirty: true }),
 
