@@ -76,7 +76,7 @@ export const updateDashboardRequestSchema = z
     const uniqueWidgetIds = new Set(widgetIds)
     if (uniqueWidgetIds.size !== widgetIds.length) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'Widget ids must be unique',
         path: ['widgets'],
       })
@@ -86,7 +86,7 @@ export const updateDashboardRequestSchema = z
     const uniqueLayoutIds = new Set(layoutIds)
     if (uniqueLayoutIds.size !== layoutIds.length) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: 'custom',
         message: 'Layout item ids must be unique',
         path: ['layouts'],
       })
@@ -95,7 +95,7 @@ export const updateDashboardRequestSchema = z
     for (const w of data.widgets) {
       if (!uniqueLayoutIds.has(w.id)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: `Widget ${w.id} has no matching layout item`,
           path: ['widgets'],
         })
@@ -105,7 +105,7 @@ export const updateDashboardRequestSchema = z
     for (const l of data.layouts) {
       if (!uniqueWidgetIds.has(l.i)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: 'custom',
           message: `Layout item ${l.i} has no matching widget`,
           path: ['layouts'],
         })
