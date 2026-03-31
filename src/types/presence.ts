@@ -63,6 +63,12 @@ export type ServerToClientEvent =
       payload: PresenceStateSnapshot
     }
   | {
+      type: 'presence:identity_assigned'
+      payload: {
+        user: PresenceUser
+      }
+    }
+  | {
       type: 'presence:user_joined'
       payload: PresenceUser
     }

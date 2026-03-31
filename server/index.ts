@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import { ensureSchema } from './db.js'
 import { registerDashboardRoutes } from './routes/dashboards.js'
+import { registerPresenceSocket } from './ws/presence.js'
 
 async function main() {
   await ensureSchema()
@@ -9,6 +10,7 @@ async function main() {
   const app = Fastify({ logger: true })
   await app.register(cors, { origin: true })
   await app.register(registerDashboardRoutes, { prefix: '/api' })
+  await app.register(registerPresenceSocket)
 
   const port = Number(process.env.PORT) || 3333
   await app.listen({ port, host: '0.0.0.0' })

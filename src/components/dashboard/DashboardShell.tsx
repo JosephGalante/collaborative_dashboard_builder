@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import DashboardCanvas from './DashboardCanvas'
 import DashboardRename from './DashboardRename'
 import DashboardSaveStatus from './DashboardSaveStatus'
+import PresenceStatus from '@/components/presence/PresenceStatus'
 import LeftSidebar from '@/components/panels/LeftSidebar'
 import RightConfigPanel from '@/components/panels/RightConfigPanel'
 import { isEditableTarget } from '@/lib/dom/isEditableTarget'
@@ -48,11 +49,14 @@ export default function DashboardShell() {
           </div>
           <DashboardRename />
         </div>
-        <DashboardSaveStatus
-          isDirty={isDirty}
-          lastSavedAt={lastSavedAt}
-          isSaving={isSaving}
-        />
+        <div className="flex items-center gap-2">
+          <PresenceStatus />
+          <DashboardSaveStatus
+            isDirty={isDirty}
+            lastSavedAt={lastSavedAt}
+            isSaving={isSaving}
+          />
+        </div>
       </header>
 
       <main className="grid h-[calc(100vh-56px)] grid-cols-[240px_1fr_320px]">
