@@ -1,4 +1,4 @@
-import type { GlobalFilters, Widget, WidgetLayout, DashboardId } from './widget'
+import type {GlobalFilters, Widget, WidgetLayout, DashboardId} from './widget'
 
 export type Dashboard = {
   id: DashboardId

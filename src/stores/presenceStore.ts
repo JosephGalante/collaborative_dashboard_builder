@@ -1,11 +1,11 @@
-import { create } from 'zustand'
+import {create} from 'zustand'
 import type {
   PresenceStateSnapshot,
   PresenceUser,
   RemoteCursor,
   UserSelection,
 } from '@/types/presence'
-import type { UserId, WidgetId } from '@/types/widget'
+import type {UserId, WidgetId} from '@/types/widget'
 
 type PresenceStore = {
   connectionStatus: 'disconnected' | 'connecting' | 'connected'
@@ -36,8 +36,8 @@ const initialState = {
 export const usePresenceStore = create<PresenceStore>((set) => ({
   ...initialState,
 
-  setConnectionStatus: (connectionStatus) => set({ connectionStatus }),
-  setCurrentUser: (currentUser) => set({ currentUser }),
+  setConnectionStatus: (connectionStatus) => set({connectionStatus}),
+  setCurrentUser: (currentUser) => set({currentUser}),
 
   setSnapshot: (snapshot) =>
     set({
@@ -57,13 +57,13 @@ export const usePresenceStore = create<PresenceStore>((set) => ({
               existing.userId === user.userId ? user : existing,
             ),
           }
-        : { users: [...state.users, user] }
+        : {users: [...state.users, user]}
     }),
 
   removeUser: (userId) =>
     set((state) => {
-      const cursors = { ...state.cursors }
-      const selections = { ...state.selections }
+      const cursors = {...state.cursors}
+      const selections = {...state.selections}
       delete cursors[userId]
       delete selections[userId]
       return {
@@ -75,14 +75,14 @@ export const usePresenceStore = create<PresenceStore>((set) => ({
 
   updateCursor: (cursor) =>
     set((state) => ({
-      cursors: { ...state.cursors, [cursor.userId]: cursor },
+      cursors: {...state.cursors, [cursor.userId]: cursor},
     })),
 
   removeCursor: (userId) =>
     set((state) => {
-      const cursors = { ...state.cursors }
+      const cursors = {...state.cursors}
       delete cursors[userId]
-      return { cursors }
+      return {cursors}
     }),
 
   updateSelection: (selection) =>
@@ -95,9 +95,9 @@ export const usePresenceStore = create<PresenceStore>((set) => ({
 
   clearSelection: (userId) =>
     set((state) => {
-      const selections = { ...state.selections }
+      const selections = {...state.selections}
       delete selections[userId]
-      return { selections }
+      return {selections}
     }),
 
   resetPresence: () => set(initialState),

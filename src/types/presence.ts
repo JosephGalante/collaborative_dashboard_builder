@@ -1,4 +1,4 @@
-import type { DashboardId, UserId, WidgetId } from './widget'
+import type {DashboardId, UserId, WidgetId} from './widget'
 
 export type PresenceUser = {
   userId: UserId

@@ -1,5 +1,5 @@
-import type { Dashboard } from './dashboard'
-import type { DashboardId, GlobalFilters, Widget, WidgetLayout } from './widget'
+import type {Dashboard} from './dashboard'
+import type {DashboardId, GlobalFilters, Widget, WidgetLayout} from './widget'
 
 export type CreateDashboardRequest = {
   name?: string

@@ -1,7 +1,7 @@
-import { create } from 'zustand'
-import type { Dashboard } from '@/types/dashboard'
-import type { GlobalFilters, Widget, WidgetId, WidgetLayout, WidgetType } from '@/types/widget'
-import { createDefaultLayout, createDefaultWidget } from '@/lib/widgets/defaultWidget'
+import {create} from 'zustand'
+import type {Dashboard} from '@/types/dashboard'
+import type {GlobalFilters, Widget, WidgetId, WidgetLayout, WidgetType} from '@/types/widget'
+import {createDefaultLayout, createDefaultWidget} from '@/lib/widgets/defaultWidget'
 
 const defaultGlobalFilters: GlobalFilters = {
   dateRange: {
@@ -51,7 +51,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
   lastSavedAt: null,
   isSaving: false,
 
-  setSaving: (saving) => set({ isSaving: saving }),
+  setSaving: (saving) => set({isSaving: saving}),
 
   hydrateFromDashboard: (dashboard) =>
     set({
@@ -67,7 +67,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       lastSavedAt: dashboard.updatedAt,
     }),
 
-  setDashboardName: (name) => set({ name, isDirty: true }),
+  setDashboardName: (name) => set({name, isDirty: true}),
 
   addWidget: (widgetType) =>
     set((state) => {
@@ -110,7 +110,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
         title: `${sourceWidget.title} Copy`,
       }
       const clonedLayout: WidgetLayout = sourceLayout
-        ? { ...sourceLayout, i: clonedWidget.id, x: sourceLayout.x + 1, y: sourceLayout.y + 1 }
+        ? {...sourceLayout, i: clonedWidget.id, x: sourceLayout.x + 1, y: sourceLayout.y + 1}
         : createDefaultLayout(clonedWidget.id, state.layouts.length)
 
       return {
@@ -121,12 +121,12 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       }
     }),
 
-  setLayouts: (layouts) => set({ layouts, isDirty: true }),
+  setLayouts: (layouts) => set({layouts, isDirty: true}),
 
   updateLayoutItem: (widgetId, patch) =>
     set((state) => ({
       layouts: state.layouts.map((layout) =>
-        layout.i === widgetId ? { ...layout, ...patch } : layout,
+        layout.i === widgetId ? {...layout, ...patch} : layout,
       ),
       isDirty: true,
     })),
@@ -138,7 +138,7 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
         ...filters,
         dateRange:
           filters.dateRange !== undefined
-            ? { ...state.globalFilters.dateRange, ...filters.dateRange }
+            ? {...state.globalFilters.dateRange, ...filters.dateRange}
             : state.globalFilters.dateRange,
         assetClasses:
           filters.assetClasses !== undefined
@@ -148,13 +148,13 @@ export const useDashboardStore = create<DashboardStore>((set) => ({
       isDirty: true,
     })),
 
-  selectWidget: (widgetId) => set({ selectedWidgetId: widgetId }),
+  selectWidget: (widgetId) => set({selectedWidgetId: widgetId}),
 
-  markSaved: (savedAt) => set({ lastSavedAt: savedAt, isDirty: false, isSaving: false }),
+  markSaved: (savedAt) => set({lastSavedAt: savedAt, isDirty: false, isSaving: false}),
 
-  markDirty: () => set({ isDirty: true }),
+  markDirty: () => set({isDirty: true}),
 
-  resetDirty: () => set({ isDirty: false }),
+  resetDirty: () => set({isDirty: false}),
 }))
 
 export function getDashboardDraft() {

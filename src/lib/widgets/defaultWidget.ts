@@ -1,4 +1,4 @@
-import type { Widget, WidgetId, WidgetLayout, WidgetType } from '@/types/widget'
+import type {Widget, WidgetId, WidgetLayout, WidgetType} from '@/types/widget'
 
 export function createDefaultWidget(type: WidgetType): Widget {
   const id = crypto.randomUUID()

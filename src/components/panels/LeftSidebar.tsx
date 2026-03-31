@@ -1,10 +1,10 @@
-import { Link } from 'react-router-dom'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import {Link} from 'react-router-dom'
+import {useDashboardStore} from '@/stores/dashboardStore'
 
 const widgetButtons = [
-  { label: 'Line chart', desc: 'Time series', type: 'line' },
-  { label: 'Bar chart', desc: 'Allocation', type: 'bar' },
-  { label: 'Stat card', desc: 'KPI', type: 'stat' },
+  {label: 'Line chart', desc: 'Time series', type: 'line'},
+  {label: 'Bar chart', desc: 'Allocation', type: 'bar'},
+  {label: 'Stat card', desc: 'KPI', type: 'stat'},
 ] as const
 
 type LeftSidebarProps = {
@@ -12,7 +12,7 @@ type LeftSidebarProps = {
   onToggle: () => void
 }
 
-export default function LeftSidebar({ collapsed, onToggle }: LeftSidebarProps) {
+export default function LeftSidebar({collapsed, onToggle}: LeftSidebarProps) {
   const addWidget = useDashboardStore((state) => state.addWidget)
 
   return (

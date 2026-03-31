@@ -1,12 +1,12 @@
-import type { SeedDataset, Widget } from '@/types/widget'
+import type {SeedDataset, Widget} from '@/types/widget'
 import WidgetBody from '@/components/widgets/WidgetBody'
-import { widgetDisplayName } from '@/components/widgets/widgetRegistry'
+import {widgetDisplayName} from '@/components/widgets/widgetRegistry'
 
 type WidgetCardProps = {
   widget: Widget
   dataset: SeedDataset
   isSelected: boolean
-  remoteEditors?: Array<{ userId: string; name: string; color: string }>
+  remoteEditors?: Array<{userId: string; name: string; color: string}>
   onSelect: (widgetId: string) => void
   onRemove: (widgetId: string) => void
   onDuplicate: (widgetId: string) => void

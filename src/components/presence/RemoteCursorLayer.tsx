@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { usePresenceStore } from '@/stores/presenceStore'
+import {useEffect, useMemo, useState} from 'react'
+import {usePresenceStore} from '@/stores/presenceStore'
 
 const STALE_CURSOR_MS = 8_000
 
@@ -17,7 +17,7 @@ export default function RemoteCursorLayer() {
   const cursorsToRender = useMemo(() => {
     return users
       .filter((u) => u.userId !== currentUser?.userId)
-      .map((u) => ({ user: u, cursor: cursors[u.userId] }))
+      .map((u) => ({user: u, cursor: cursors[u.userId]}))
       .filter((entry) => entry.cursor && nowTick - entry.cursor.updatedAt < STALE_CURSOR_MS)
   }, [users, cursors, currentUser, nowTick])
 
@@ -27,7 +27,7 @@ export default function RemoteCursorLayer() {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
-      {cursorsToRender.map(({ user, cursor }) => (
+      {cursorsToRender.map(({user, cursor}) => (
         <div
           key={user.userId}
           className="absolute"
@@ -39,11 +39,11 @@ export default function RemoteCursorLayer() {
           <div className="-translate-x-1 -translate-y-1">
             <div
               className="h-3 w-3 rounded-full border border-zinc-950 shadow"
-              style={{ backgroundColor: user.color }}
+              style={{backgroundColor: user.color}}
             />
             <div
               className="mt-1 rounded px-1.5 py-0.5 text-[10px] font-medium text-zinc-950 shadow"
-              style={{ backgroundColor: user.color }}
+              style={{backgroundColor: user.color}}
             >
               {user.name}
             </div>

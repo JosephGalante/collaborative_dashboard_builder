@@ -1,4 +1,4 @@
-import type { AssetClass, GlobalFilters, PerformanceStatBlock, SeedDataset } from '@/types/widget'
+import type {AssetClass, GlobalFilters, PerformanceStatBlock, SeedDataset} from '@/types/widget'
 
 function rowInDateRange(dateStr: string, range: GlobalFilters['dateRange']): boolean {
   if (range.from && dateStr < range.from) {

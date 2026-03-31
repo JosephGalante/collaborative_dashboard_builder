@@ -20,8 +20,8 @@ async function main() {
 
   const create = await request('/api/dashboards', {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ name: 'Recruiter Demo Dashboard' }),
+    headers: {'content-type': 'application/json'},
+    body: JSON.stringify({name: 'Recruiter Demo Dashboard'}),
   })
 
   const dashboardId = create?.dashboard?.id
@@ -31,7 +31,7 @@ async function main() {
 
   await request(`/api/dashboards/${dashboardId}`, {
     method: 'PUT',
-    headers: { 'content-type': 'application/json' },
+    headers: {'content-type': 'application/json'},
     body: JSON.stringify({
       name: 'Recruiter Demo Dashboard',
       widgets: [
@@ -67,12 +67,12 @@ async function main() {
         },
       ],
       layouts: [
-        { i: lineId, x: 0, y: 0, w: 8, h: 6, minW: 3, minH: 3 },
-        { i: barId, x: 8, y: 0, w: 4, h: 6, minW: 3, minH: 3 },
-        { i: statId, x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3 },
+        {i: lineId, x: 0, y: 0, w: 8, h: 6, minW: 3, minH: 3},
+        {i: barId, x: 8, y: 0, w: 4, h: 6, minW: 3, minH: 3},
+        {i: statId, x: 0, y: 6, w: 4, h: 4, minW: 3, minH: 3},
       ],
       globalFilters: {
-        dateRange: { from: null, to: null },
+        dateRange: {from: null, to: null},
         assetClasses: [],
       },
     }),

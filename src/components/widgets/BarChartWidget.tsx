@@ -1,7 +1,7 @@
-import { useMemo, useState, useEffect } from 'react'
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import type { BarWidget, SeedDataset } from '@/types/widget'
-import { formatAssetClassLabel } from '@/lib/charts/formatStatValue'
+import {useMemo, useState, useEffect} from 'react'
+import {Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import type {BarWidget, SeedDataset} from '@/types/widget'
+import {formatAssetClassLabel} from '@/lib/charts/formatStatValue'
 import WidgetChartSkeleton from './WidgetChartSkeleton'
 import WidgetEmptyState from './WidgetEmptyState'
 
@@ -10,7 +10,7 @@ type BarChartWidgetProps = {
   dataset: SeedDataset
 }
 
-export default function BarChartWidget({ widget, dataset }: BarChartWidgetProps) {
+export default function BarChartWidget({widget, dataset}: BarChartWidgetProps) {
   const [showSkeleton, setShowSkeleton] = useState(true)
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function BarChartWidget({ widget, dataset }: BarChartWidgetProps)
   }, [widget.id])
 
   const rows = useMemo(() => {
-    const { categoryField, valueField } = widget.config
+    const {categoryField, valueField} = widget.config
     return dataset.assetAllocation.map((row) => ({
       name: formatAssetClassLabel(String(row[categoryField])),
       value: row[valueField],
@@ -41,24 +41,24 @@ export default function BarChartWidget({ widget, dataset }: BarChartWidgetProps)
         height="100%"
         minWidth={0}
         minHeight={120}
-        initialDimension={{ width: 320, height: 180 }}
+        initialDimension={{width: 320, height: 180}}
       >
-        <BarChart data={rows} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+        <BarChart data={rows} margin={{top: 4, right: 8, left: 0, bottom: 0}}>
           <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fill: '#a1a1aa', fontSize: 9 }}
+            tick={{fill: '#a1a1aa', fontSize: 9}}
             tickLine={false}
-            axisLine={{ stroke: '#52525b' }}
+            axisLine={{stroke: '#52525b'}}
             interval={0}
             angle={-25}
             textAnchor="end"
             height={48}
           />
           <YAxis
-            tick={{ fill: '#a1a1aa', fontSize: 10 }}
+            tick={{fill: '#a1a1aa', fontSize: 10}}
             tickLine={false}
-            axisLine={{ stroke: '#52525b' }}
+            axisLine={{stroke: '#52525b'}}
             tickFormatter={(v) =>
               v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`
             }

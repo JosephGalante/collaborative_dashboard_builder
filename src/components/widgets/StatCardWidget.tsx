@@ -1,6 +1,6 @@
-import { useMemo, useState, useEffect } from 'react'
-import type { SeedDataset, StatWidget } from '@/types/widget'
-import { formatStatValue } from '@/lib/charts/formatStatValue'
+import {useMemo, useState, useEffect} from 'react'
+import type {SeedDataset, StatWidget} from '@/types/widget'
+import {formatStatValue} from '@/lib/charts/formatStatValue'
 import WidgetChartSkeleton from './WidgetChartSkeleton'
 import WidgetEmptyState from './WidgetEmptyState'
 
@@ -9,7 +9,7 @@ type StatCardWidgetProps = {
   dataset: SeedDataset
 }
 
-export default function StatCardWidget({ widget, dataset }: StatCardWidgetProps) {
+export default function StatCardWidget({widget, dataset}: StatCardWidgetProps) {
   const [showSkeleton, setShowSkeleton] = useState(true)
 
   useEffect(() => {

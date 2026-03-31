@@ -1,15 +1,15 @@
-import { useMemo } from 'react'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import {useMemo} from 'react'
+import {useDashboardStore} from '@/stores/dashboardStore'
 import WidgetConfigForm from '@/components/panels/WidgetConfigForm'
 import GlobalFiltersPanel from '@/components/panels/GlobalFiltersPanel'
-import { usePresenceStore } from '@/stores/presenceStore'
+import {usePresenceStore} from '@/stores/presenceStore'
 
 type RightConfigPanelProps = {
   collapsed: boolean
   onToggle: () => void
 }
 
-export default function RightConfigPanel({ collapsed, onToggle }: RightConfigPanelProps) {
+export default function RightConfigPanel({collapsed, onToggle}: RightConfigPanelProps) {
   const widgets = useDashboardStore((state) => state.widgets)
   const selectedWidgetId = useDashboardStore((state) => state.selectedWidgetId)
   const updateWidget = useDashboardStore((state) => state.updateWidget)

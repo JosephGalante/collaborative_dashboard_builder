@@ -1,12 +1,12 @@
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react'
 import DashboardCanvas from './DashboardCanvas'
 import DashboardRename from './DashboardRename'
 import DashboardSaveStatus from './DashboardSaveStatus'
 import PresenceStatus from '@/components/presence/PresenceStatus'
 import LeftSidebar from '@/components/panels/LeftSidebar'
 import RightConfigPanel from '@/components/panels/RightConfigPanel'
-import { isEditableTarget } from '@/lib/dom/isEditableTarget'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import {isEditableTarget} from '@/lib/dom/isEditableTarget'
+import {useDashboardStore} from '@/stores/dashboardStore'
 
 const githubUrl = 'https://github.com/JosephGalante/collaborative_dashboard_builder'
 

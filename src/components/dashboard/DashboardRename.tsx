@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import {useEffect, useRef, useState} from 'react'
+import {useDashboardStore} from '@/stores/dashboardStore'
 
 export default function DashboardRename() {
   const name = useDashboardStore((s) => s.name)

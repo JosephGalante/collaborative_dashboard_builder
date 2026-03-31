@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import {z} from 'zod'
 
 const dashboardNameSchema = z.string().max(100)
 const widgetTitleSchema = z.string().max(80)

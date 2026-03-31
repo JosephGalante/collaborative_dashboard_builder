@@ -1,18 +1,18 @@
-import { useEffect, useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { z } from 'zod'
+import {useEffect, useRef} from 'react'
+import {Link, useParams} from 'react-router-dom'
+import {useQuery} from '@tanstack/react-query'
+import {z} from 'zod'
 import DashboardLoadingSkeleton from '@/components/dashboard/DashboardLoadingSkeleton'
 import DashboardShell from '@/components/dashboard/DashboardShell'
-import { getDashboard } from '@/api/dashboards'
-import { useDashboardStore } from '@/stores/dashboardStore'
-import { useDashboardAutosave } from '@/hooks/useDashboardAutosave'
-import { useDashboardSocket } from '@/hooks/useDashboardSocket'
+import {getDashboard} from '@/api/dashboards'
+import {useDashboardStore} from '@/stores/dashboardStore'
+import {useDashboardAutosave} from '@/hooks/useDashboardAutosave'
+import {useDashboardSocket} from '@/hooks/useDashboardSocket'
 
 const uuidSchema = z.uuid()
 
 export default function DashboardPage() {
-  const { dashboardId } = useParams()
+  const {dashboardId} = useParams()
   const hydrateFromDashboard = useDashboardStore((s) => s.hydrateFromDashboard)
   const hydratedFor = useRef<string | null>(null)
 

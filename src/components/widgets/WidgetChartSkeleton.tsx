@@ -7,7 +7,7 @@ export default function WidgetChartSkeleton() {
           <div
             key={i}
             className="flex-1 animate-pulse rounded-sm bg-zinc-700"
-            style={{ height: `${h}%`, maxHeight: '100%' }}
+            style={{height: `${h}%`, maxHeight: '100%'}}
           />
         ))}
       </div>

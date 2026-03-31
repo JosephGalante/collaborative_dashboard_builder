@@ -1,4 +1,4 @@
-import type { StatWidgetConfig } from '@/types/widget'
+import type {StatWidgetConfig} from '@/types/widget'
 
 export function formatStatValue(value: number, format: StatWidgetConfig['format']): string {
   if (format === 'currency') {
@@ -11,7 +11,7 @@ export function formatStatValue(value: number, format: StatWidgetConfig['format'
   if (format === 'percent') {
     return `${value.toFixed(1)}%`
   }
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)
+  return new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(value)
 }
 
 export function formatAssetClassLabel(assetClass: string): string {

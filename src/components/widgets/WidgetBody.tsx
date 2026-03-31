@@ -1,4 +1,4 @@
-import type { SeedDataset, Widget } from '@/types/widget'
+import type {SeedDataset, Widget} from '@/types/widget'
 import LineChartWidget from './LineChartWidget'
 import BarChartWidget from './BarChartWidget'
 import StatCardWidget from './StatCardWidget'
@@ -8,7 +8,7 @@ type WidgetBodyProps = {
   dataset: SeedDataset
 }
 
-export default function WidgetBody({ widget, dataset }: WidgetBodyProps) {
+export default function WidgetBody({widget, dataset}: WidgetBodyProps) {
   switch (widget.type) {
     case 'line':
       return <LineChartWidget widget={widget} dataset={dataset} />

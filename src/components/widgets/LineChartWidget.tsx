@@ -1,14 +1,6 @@
-import { useMemo, useState, useEffect } from 'react'
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts'
-import type { LineWidget, SeedDataset } from '@/types/widget'
+import {useMemo, useState, useEffect} from 'react'
+import {CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts'
+import type {LineWidget, SeedDataset} from '@/types/widget'
 import WidgetChartSkeleton from './WidgetChartSkeleton'
 import WidgetEmptyState from './WidgetEmptyState'
 
@@ -17,7 +9,7 @@ type LineChartWidgetProps = {
   dataset: SeedDataset
 }
 
-export default function LineChartWidget({ widget, dataset }: LineChartWidgetProps) {
+export default function LineChartWidget({widget, dataset}: LineChartWidgetProps) {
   const [showSkeleton, setShowSkeleton] = useState(true)
 
   useEffect(() => {
@@ -27,7 +19,7 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
 
   const points = useMemo(() => {
     const rows = dataset.portfolioTimeseries
-    const { xField, yField } = widget.config
+    const {xField, yField} = widget.config
     return rows.map((row) => ({
       x: row[xField],
       y: row[yField],
@@ -49,21 +41,21 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
         height="100%"
         minWidth={0}
         minHeight={120}
-        initialDimension={{ width: 320, height: 180 }}
+        initialDimension={{width: 320, height: 180}}
       >
-        <LineChart data={points} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+        <LineChart data={points} margin={{top: 4, right: 8, left: 0, bottom: 0}}>
           <CartesianGrid strokeDasharray="3 3" stroke="#3f3f46" vertical={false} />
           <XAxis
             dataKey="x"
-            tick={{ fill: '#a1a1aa', fontSize: 10 }}
+            tick={{fill: '#a1a1aa', fontSize: 10}}
             tickLine={false}
-            axisLine={{ stroke: '#52525b' }}
+            axisLine={{stroke: '#52525b'}}
             tickFormatter={(v) => String(v).slice(5)}
           />
           <YAxis
-            tick={{ fill: '#a1a1aa', fontSize: 10 }}
+            tick={{fill: '#a1a1aa', fontSize: 10}}
             tickLine={false}
-            axisLine={{ stroke: '#52525b' }}
+            axisLine={{stroke: '#52525b'}}
             tickFormatter={(v) =>
               v >= 1_000_000 ? `${(v / 1_000_000).toFixed(1)}M` : `${(v / 1000).toFixed(0)}k`
             }
@@ -76,7 +68,7 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
               borderRadius: '6px',
               fontSize: '12px',
             }}
-            labelStyle={{ color: '#e4e4e7' }}
+            labelStyle={{color: '#e4e4e7'}}
             formatter={(value) => {
               const n = typeof value === 'number' ? value : Number(value)
               const formatted =
@@ -86,7 +78,7 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
                       currency: 'USD',
                       maximumFractionDigits: 0,
                     }).format(n)
-                  : new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(n)
+                  : new Intl.NumberFormat('en-US', {maximumFractionDigits: 0}).format(n)
               return [formatted, widget.config.yField === 'netFlows' ? 'Net flows' : 'Value']
             }}
           />
@@ -96,7 +88,7 @@ export default function LineChartWidget({ widget, dataset }: LineChartWidgetProp
             stroke="#818cf8"
             strokeWidth={2}
             dot={false}
-            activeDot={{ r: 4, fill: '#a5b4fc' }}
+            activeDot={{r: 4, fill: '#a5b4fc'}}
           />
         </LineChart>
       </ResponsiveContainer>

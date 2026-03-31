@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import {useMemo} from 'react'
 
 type DashboardSaveStatusProps = {
   isDirty: boolean
@@ -25,10 +25,10 @@ export default function DashboardSaveStatus({
 }: DashboardSaveStatusProps) {
   const label = useMemo(() => {
     if (isSaving) {
-      return { text: 'Saving…', className: 'text-amber-300' }
+      return {text: 'Saving…', className: 'text-amber-300'}
     }
     if (isDirty) {
-      return { text: 'Unsaved changes', className: 'text-amber-400' }
+      return {text: 'Unsaved changes', className: 'text-amber-400'}
     }
     if (lastSavedAt) {
       return {

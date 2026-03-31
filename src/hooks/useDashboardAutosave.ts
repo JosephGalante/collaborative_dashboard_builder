@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
-import { z } from 'zod'
-import { useShallow } from 'zustand/react/shallow'
-import { updateDashboard } from '@/api/dashboards'
-import { getDashboardDraft, useDashboardStore } from '@/stores/dashboardStore'
+import {useEffect} from 'react'
+import {z} from 'zod'
+import {useShallow} from 'zustand/react/shallow'
+import {updateDashboard} from '@/api/dashboards'
+import {getDashboardDraft, useDashboardStore} from '@/stores/dashboardStore'
 
 /**
  * Debounced autosave when the store is dirty. Requires a hydrated dashboard id.

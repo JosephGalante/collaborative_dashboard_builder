@@ -1,12 +1,12 @@
-import GridLayout, { WidthProvider } from 'react-grid-layout/legacy'
-import { useMemo } from 'react'
+import GridLayout, {WidthProvider} from 'react-grid-layout/legacy'
+import {useMemo} from 'react'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
 import RemoteCursorLayer from '@/components/presence/RemoteCursorLayer'
-import { useDashboardStore } from '@/stores/dashboardStore'
-import { useDerivedSeedDataset } from '@/hooks/useDerivedSeedDataset'
-import { usePresenceStore } from '@/stores/presenceStore'
+import {useDashboardStore} from '@/stores/dashboardStore'
+import {useDerivedSeedDataset} from '@/hooks/useDerivedSeedDataset'
+import {usePresenceStore} from '@/stores/presenceStore'
 
 const AutoWidthGridLayout = WidthProvider(GridLayout)
 
@@ -47,13 +47,13 @@ export default function DashboardCanvas() {
   const dataset = useDerivedSeedDataset(globalFilters)
 
   const remoteEditorsByWidgetId = useMemo(() => {
-    const byWidgetId = new Map<string, Array<{ userId: string; name: string; color: string }>>()
+    const byWidgetId = new Map<string, Array<{userId: string; name: string; color: string}>>()
     for (const user of users) {
       if (user.userId === currentUser?.userId) continue
       const selected = selections[user.userId]
       if (!selected) continue
       const next = byWidgetId.get(selected) ?? []
-      next.push({ userId: user.userId, name: user.name, color: user.color })
+      next.push({userId: user.userId, name: user.name, color: user.color})
       byWidgetId.set(selected, next)
     }
     return byWidgetId

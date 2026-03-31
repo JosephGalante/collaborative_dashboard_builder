@@ -1,17 +1,17 @@
-import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
-import { createDashboard } from '@/api/dashboards'
+import {useEffect, useRef} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {useMutation} from '@tanstack/react-query'
+import {createDashboard} from '@/api/dashboards'
 import DashboardLoadingSkeleton from '@/components/dashboard/DashboardLoadingSkeleton'
 
 export default function CreateDashboardPage() {
   const navigate = useNavigate()
   const started = useRef(false)
 
-  const { mutate, isError } = useMutation({
+  const {mutate, isError} = useMutation({
     mutationFn: () => createDashboard({}),
     onSuccess: (res) => {
-      navigate(`/dashboards/${res.dashboard.id}`, { replace: true })
+      navigate(`/dashboards/${res.dashboard.id}`, {replace: true})
     },
   })
 

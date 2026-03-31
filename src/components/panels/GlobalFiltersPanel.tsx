@@ -1,11 +1,11 @@
-import type { AssetClass } from '@/types/widget'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import type {AssetClass} from '@/types/widget'
+import {useDashboardStore} from '@/stores/dashboardStore'
 
-const assetClassOptions: { value: AssetClass; label: string }[] = [
-  { value: 'equities', label: 'Equities' },
-  { value: 'fixed_income', label: 'Fixed income' },
-  { value: 'cash', label: 'Cash' },
-  { value: 'alternatives', label: 'Alternatives' },
+const assetClassOptions: {value: AssetClass; label: string}[] = [
+  {value: 'equities', label: 'Equities'},
+  {value: 'fixed_income', label: 'Fixed income'},
+  {value: 'cash', label: 'Cash'},
+  {value: 'alternatives', label: 'Alternatives'},
 ]
 
 const inputClass =
@@ -16,13 +16,13 @@ export default function GlobalFiltersPanel() {
   const globalFilters = useDashboardStore((state) => state.globalFilters)
   const setGlobalFilters = useDashboardStore((state) => state.setGlobalFilters)
 
-  const { dateRange, assetClasses } = globalFilters
+  const {dateRange, assetClasses} = globalFilters
 
   function toggleAssetClass(value: AssetClass) {
     const next = assetClasses.includes(value)
       ? assetClasses.filter((a) => a !== value)
       : [...assetClasses, value]
-    setGlobalFilters({ assetClasses: next })
+    setGlobalFilters({assetClasses: next})
   }
 
   return (
@@ -75,7 +75,7 @@ export default function GlobalFiltersPanel() {
         </div>
         <button
           type="button"
-          onClick={() => setGlobalFilters({ dateRange: { from: null, to: null } })}
+          onClick={() => setGlobalFilters({dateRange: {from: null, to: null}})}
           className="text-xs text-indigo-400 hover:text-indigo-300"
         >
           Clear dates
@@ -102,7 +102,7 @@ export default function GlobalFiltersPanel() {
         </div>
         <button
           type="button"
-          onClick={() => setGlobalFilters({ assetClasses: [] })}
+          onClick={() => setGlobalFilters({assetClasses: []})}
           className="text-xs text-indigo-400 hover:text-indigo-300"
         >
           Clear asset filters

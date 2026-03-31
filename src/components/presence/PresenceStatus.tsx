@@ -1,5 +1,5 @@
-import { useMemo } from 'react'
-import { usePresenceStore } from '@/stores/presenceStore'
+import {useMemo} from 'react'
+import {usePresenceStore} from '@/stores/presenceStore'
 
 function statusDot(status: 'disconnected' | 'connecting' | 'connected') {
   if (status === 'connected') return 'bg-emerald-500'
@@ -39,7 +39,7 @@ export default function PresenceStatus() {
             key={user.userId}
             title={user.name}
             className="inline-flex size-5 items-center justify-center rounded-full border border-zinc-900 text-[10px] font-semibold text-zinc-950"
-            style={{ backgroundColor: user.color }}
+            style={{backgroundColor: user.color}}
           >
             {user.name.slice(0, 1).toUpperCase()}
           </span>

@@ -1,6 +1,6 @@
-import type { Widget, WidgetId, WidgetType } from '@/types/widget'
-import { reassignWidgetType } from '@/lib/widgets/defaultWidget'
-import { widgetDisplayName } from '@/components/widgets/widgetRegistry'
+import type {Widget, WidgetId, WidgetType} from '@/types/widget'
+import {reassignWidgetType} from '@/lib/widgets/defaultWidget'
+import {widgetDisplayName} from '@/components/widgets/widgetRegistry'
 
 const inputClass =
   'mt-1 w-full rounded-md border border-zinc-700 bg-zinc-950 px-2 py-1.5 text-sm text-zinc-100 outline-none ring-indigo-500/0 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30'
@@ -13,7 +13,7 @@ type WidgetConfigFormProps = {
 
 const widgetTypes: WidgetType[] = ['line', 'bar', 'stat']
 
-export default function WidgetConfigForm({ widget, updateWidget }: WidgetConfigFormProps) {
+export default function WidgetConfigForm({widget, updateWidget}: WidgetConfigFormProps) {
   return (
     <div className="space-y-5">
       <div>
@@ -74,7 +74,7 @@ function LineConfigFields({
   widget,
   updateWidget,
 }: {
-  widget: Extract<Widget, { type: 'line' }>
+  widget: Extract<Widget, {type: 'line'}>
   updateWidget: WidgetConfigFormProps['updateWidget']
 }) {
   return (
@@ -105,7 +105,7 @@ function LineConfigFields({
               if (current.type !== 'line') return current
               return {
                 ...current,
-                config: { ...current.config, yField },
+                config: {...current.config, yField},
               }
             })
           }}
@@ -136,7 +136,7 @@ function StatConfigFields({
   widget,
   updateWidget,
 }: {
-  widget: Extract<Widget, { type: 'stat' }>
+  widget: Extract<Widget, {type: 'stat'}>
   updateWidget: WidgetConfigFormProps['updateWidget']
 }) {
   return (
@@ -155,7 +155,7 @@ function StatConfigFields({
               if (current.type !== 'stat') return current
               return {
                 ...current,
-                config: { ...current.config, statKey },
+                config: {...current.config, statKey},
               }
             })
           }}
@@ -179,7 +179,7 @@ function StatConfigFields({
               if (current.type !== 'stat') return current
               return {
                 ...current,
-                config: { ...current.config, format },
+                config: {...current.config, format},
               }
             })
           }}

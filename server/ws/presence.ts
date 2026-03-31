@@ -1,6 +1,6 @@
-import type { FastifyPluginAsync } from 'fastify'
+import type {FastifyPluginAsync} from 'fastify'
 import websocket from '@fastify/websocket'
-import { randomUUID } from 'node:crypto'
+import {randomUUID} from 'node:crypto'
 
 type PresenceUser = {
   userId: string
@@ -11,7 +11,7 @@ type PresenceUser = {
 type PresenceRoom = {
   users: Map<string, PresenceUser>
   selections: Map<string, string | null>
-  cursors: Map<string, { userId: string; x: number; y: number; updatedAt: number }>
+  cursors: Map<string, {userId: string; x: number; y: number; updatedAt: number}>
   sockets: Set<WsLike>
 }
 
@@ -58,7 +58,7 @@ type WsLike = {
 }
 
 const rooms = new Map<string, PresenceRoom>()
-const socketMeta = new WeakMap<WsLike, { dashboardId: string; userId: string }>()
+const socketMeta = new WeakMap<WsLike, {dashboardId: string; userId: string}>()
 
 function colorFromUserId(userId: string): string {
   let hash = 0
@@ -121,7 +121,7 @@ function leaveRoom(socket: WsLike) {
     room.cursors.delete(meta.userId)
     broadcast(room, {
       type: 'presence:user_left',
-      payload: { userId: meta.userId },
+      payload: {userId: meta.userId},
     })
   }
 
@@ -138,7 +138,7 @@ function hasConnectedUser(room: PresenceRoom, userId: string): boolean {
 export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
   await fastify.register(websocket)
 
-  fastify.get('/ws', { websocket: true }, (socket) => {
+  fastify.get('/ws', {websocket: true}, (socket) => {
     socket.on('message', (raw: Buffer) => {
       let event: SocketEvent
       try {
@@ -148,7 +148,7 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
       }
 
       if (event.type === 'presence:join') {
-        const { dashboardId } = event.payload
+        const {dashboardId} = event.payload
         const room = getRoom(dashboardId)
         const nextUser = hasConnectedUser(room, event.payload.user.userId)
           ? (() => {
@@ -162,12 +162,12 @@ export const registerPresenceSocket: FastifyPluginAsync = async (fastify) => {
           : event.payload.user
         room.sockets.add(socket)
         room.users.set(nextUser.userId, nextUser)
-        socketMeta.set(socket, { dashboardId, userId: nextUser.userId })
+        socketMeta.set(socket, {dashboardId, userId: nextUser.userId})
 
         if (nextUser.userId !== event.payload.user.userId) {
           sendJson(socket, {
             type: 'presence:identity_assigned',
-            payload: { user: nextUser },
+            payload: {user: nextUser},
           })
         }
 

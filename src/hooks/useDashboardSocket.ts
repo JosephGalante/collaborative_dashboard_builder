@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef } from 'react'
-import type { ClientToServerEvent, PresenceUser, ServerToClientEvent } from '@/types/presence'
-import { usePresenceStore } from '@/stores/presenceStore'
-import { useDashboardStore } from '@/stores/dashboardStore'
+import {useEffect, useMemo, useRef} from 'react'
+import type {ClientToServerEvent, PresenceUser, ServerToClientEvent} from '@/types/presence'
+import {usePresenceStore} from '@/stores/presenceStore'
+import {useDashboardStore} from '@/stores/dashboardStore'
 
 /**
  * One presence identity per browser tab. `localStorage` would dedupe tabs into the same userId,
@@ -101,7 +101,7 @@ export function useDashboardSocket(dashboardId: string | undefined) {
       setConnectionStatus('connected')
       send({
         type: 'presence:join',
-        payload: { dashboardId, user },
+        payload: {dashboardId, user},
       })
       const selectedWidgetIdOnOpen = useDashboardStore.getState().selectedWidgetId
       send({
@@ -166,7 +166,7 @@ export function useDashboardSocket(dashboardId: string | undefined) {
     return () => {
       send({
         type: 'presence:leave',
-        payload: { dashboardId, userId: user.userId },
+        payload: {dashboardId, userId: user.userId},
       })
       ws.close()
       if (socketRef.current === ws) {
@@ -223,7 +223,7 @@ export function useDashboardSocket(dashboardId: string | undefined) {
       ws.send(
         JSON.stringify({
           type: 'cursor:move',
-          payload: { dashboardId, userId: currentUser.userId, x, y },
+          payload: {dashboardId, userId: currentUser.userId, x, y},
         } satisfies ClientToServerEvent),
       )
     }

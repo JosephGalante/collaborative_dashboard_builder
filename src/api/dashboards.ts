@@ -1,5 +1,5 @@
-import type { Dashboard } from '@/types/dashboard'
-import type { GlobalFilters, Widget, WidgetLayout } from '@/types/widget'
+import type {Dashboard} from '@/types/dashboard'
+import type {GlobalFilters, Widget, WidgetLayout} from '@/types/widget'
 
 const apiBase =
   typeof import.meta.env.VITE_API_BASE_URL === 'string'
@@ -39,7 +39,7 @@ export async function createDashboard(
 ): Promise<CreateDashboardResponse> {
   const res = await fetch(apiUrl('/api/dashboards'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(input),
   })
   if (!res.ok) {
@@ -64,7 +64,7 @@ export async function updateDashboard(
 ): Promise<UpdateDashboardResponse> {
   const res = await fetch(apiUrl(`/api/dashboards/${encodeURIComponent(id)}`), {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(input),
   })
   if (!res.ok) {

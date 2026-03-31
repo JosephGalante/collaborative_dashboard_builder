@@ -1,14 +1,14 @@
-import type { FastifyPluginAsync } from 'fastify'
-import { z } from 'zod'
-import { pool, type DashboardRow } from '../db.js'
-import { createDashboardRequestSchema, updateDashboardRequestSchema } from '../schemas/dashboard.js'
+import type {FastifyPluginAsync} from 'fastify'
+import {z} from 'zod'
+import {pool, type DashboardRow} from '../db.js'
+import {createDashboardRequestSchema, updateDashboardRequestSchema} from '../schemas/dashboard.js'
 
 const idParamSchema = z.object({
   id: z.uuid(),
 })
 
 const defaultGlobalFilters = {
-  dateRange: { from: null, to: null },
+  dateRange: {from: null, to: null},
   assetClasses: [] as string[],
 }
 
@@ -28,7 +28,7 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.post('/dashboards', async (request, reply) => {
     const parsed = createDashboardRequestSchema.safeParse(request.body ?? {})
     if (!parsed.success) {
-      return reply.status(400).send({ error: 'Invalid body', details: parsed.error.flatten() })
+      return reply.status(400).send({error: 'Invalid body', details: parsed.error.flatten()})
     }
 
     const name = parsed.data.name ?? 'Untitled Dashboard'
@@ -42,16 +42,16 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
 
     const row = result.rows[0]
     if (!row) {
-      return reply.status(500).send({ error: 'Failed to create dashboard' })
+      return reply.status(500).send({error: 'Failed to create dashboard'})
     }
 
-    return { dashboard: rowToDashboard(row) }
+    return {dashboard: rowToDashboard(row)}
   })
 
   fastify.get('/dashboards/:id', async (request, reply) => {
     const params = idParamSchema.safeParse(request.params)
     if (!params.success) {
-      return reply.status(400).send({ error: 'Invalid id' })
+      return reply.status(400).send({error: 'Invalid id'})
     }
 
     const result = await pool.query<DashboardRow>(`SELECT * FROM dashboards WHERE id = $1`, [
@@ -60,24 +60,24 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
 
     const row = result.rows[0]
     if (!row) {
-      return reply.status(404).send({ error: 'Dashboard not found' })
+      return reply.status(404).send({error: 'Dashboard not found'})
     }
 
-    return { dashboard: rowToDashboard(row) }
+    return {dashboard: rowToDashboard(row)}
   })
 
   fastify.put('/dashboards/:id', async (request, reply) => {
     const params = idParamSchema.safeParse(request.params)
     if (!params.success) {
-      return reply.status(400).send({ error: 'Invalid id' })
+      return reply.status(400).send({error: 'Invalid id'})
     }
 
     const parsed = updateDashboardRequestSchema.safeParse(request.body ?? {})
     if (!parsed.success) {
-      return reply.status(400).send({ error: 'Invalid body', details: parsed.error.flatten() })
+      return reply.status(400).send({error: 'Invalid body', details: parsed.error.flatten()})
     }
 
-    const { name, widgets, layouts, globalFilters } = parsed.data
+    const {name, widgets, layouts, globalFilters} = parsed.data
 
     const result = await pool.query<DashboardRow>(
       `UPDATE dashboards
@@ -99,9 +99,9 @@ export const registerDashboardRoutes: FastifyPluginAsync = async (fastify) => {
 
     const row = result.rows[0]
     if (!row) {
-      return reply.status(404).send({ error: 'Dashboard not found' })
+      return reply.status(404).send({error: 'Dashboard not found'})
     }
 
-    return { dashboard: rowToDashboard(row) }
+    return {dashboard: rowToDashboard(row)}
   })
 }
