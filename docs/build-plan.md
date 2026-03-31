@@ -9,9 +9,13 @@ This project plan is split into focused docs so each decision can be referenced 
 3. `docs/architecture.md`
 4. `docs/product-ui.md`
 5. `docs/backend-realtime.md`
-6. `docs/implementation-phases.md`
-7. `docs/performance-and-risks.md`
-8. `docs/portfolio-packaging.md`
+6. `docs/types-and-events-contracts.md`
+7. `docs/rest-api-contracts.md`
+8. `docs/zustand-store-contracts.md`
+9. `docs/implementation-phases.md`
+10. `docs/milestone-checklist.md`
+11. `docs/performance-and-risks.md`
+12. `docs/portfolio-packaging.md`
 
 ## Primary Execution Checklist
 
