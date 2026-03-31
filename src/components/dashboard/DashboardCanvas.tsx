@@ -3,6 +3,7 @@ import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import WidgetCard from './WidgetCard'
 import { useDashboardStore } from '@/stores/dashboardStore'
+import { seedDataset } from '@/data/seedData'
 
 const AutoWidthGridLayout = WidthProvider(GridLayout)
 
@@ -78,6 +79,7 @@ export default function DashboardCanvas() {
               <div className="h-[calc(100%-34px)]">
                 <WidgetCard
                   widget={widget}
+                  dataset={seedDataset}
                   isSelected={selectedWidgetId === widget.id}
                   onSelect={selectWidget}
                   onRemove={removeWidget}

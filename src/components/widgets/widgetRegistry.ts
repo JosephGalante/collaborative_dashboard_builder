@@ -5,3 +5,7 @@ export const widgetRegistry: Record<WidgetType, { displayName: string }> = {
   bar: { displayName: 'Bar Chart' },
   stat: { displayName: 'Stat Card' },
 }
+
+export function widgetDisplayName(type: WidgetType): string {
+  return widgetRegistry[type].displayName
+}
