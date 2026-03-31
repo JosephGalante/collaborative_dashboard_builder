@@ -1,19 +1,73 @@
-# Collaborative Dashboard Builder
+# React + TypeScript + Vite
 
-Planning docs are split for easy reference during implementation.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Documentation Map
+Currently, two official plugins are available:
 
-- `docs/build-plan.md` - execution index and master checklist
-- `docs/project-concept.md` - product concept and portfolio rationale
-- `docs/mvp-scope.md` - strict in-scope / out-of-scope boundaries
-- `docs/architecture.md` - stack, state model, entities, folder shape
-- `docs/product-ui.md` - IA, UX states, and data strategy
-- `docs/backend-realtime.md` - API, websocket, DB, collaboration semantics
-- `docs/types-and-events-contracts.md` - exact TS domain, presence, and websocket event contracts
-- `docs/rest-api-contracts.md` - exact REST request/response contracts and validation rules
-- `docs/zustand-store-contracts.md` - exact store shapes and store behavior expectations
-- `docs/implementation-phases.md` - phase-by-phase delivery plan
-- `docs/milestone-checklist.md` - executable milestone checklist and prompt sequence
-- `docs/performance-and-risks.md` - perf pitfalls and risk controls
-- `docs/portfolio-packaging.md` - resume framing and final packaging
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+
+## React Compiler
+
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
